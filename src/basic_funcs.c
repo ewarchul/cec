@@ -17,6 +17,15 @@ void bent_cigar_func(double *x, double *f, int nx, double *Os, double *Mr,
   free(z);
 }
 
+double bent_cigar_func_modern(size_t dim, double input[dim]) {
+  double result = 0;
+  result = input[0] * input[0];
+  for (size_t i = 1; i < dim; ++i) {
+  result += pow(10.0, 6.0) * input[i] * input[i];
+  }
+  return result;
+}
+
 void sphere_func(double *x, double *f, int nx, double *Os, double *Mr,
                  int s_flag, int r_flag) {
   int i;
