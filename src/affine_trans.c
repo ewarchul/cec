@@ -7,6 +7,15 @@ void shiftfunc(double *x, double *xshift, int nx, double *Os) {
   }
 }
 
+/*double *shift_modern(size_t dim, double input[dim], int problem_num,*/
+/*cec_state_t *state) {*/
+/*double *output = calloc(dim, sizeof dim);*/
+/*for (size_t i = 0; i < dim; ++i) {*/
+/*output[i] = input[i] - state->shift_values_.data_[dim][problem_num][i];*/
+/*}*/
+/*return output;*/
+/*}*/
+
 void rotatefunc(double *x, double *xrot, int nx, double *Mr) {
   int i, j;
   for (i = 0; i < nx; i++) {
@@ -17,42 +26,84 @@ void rotatefunc(double *x, double *xrot, int nx, double *Mr) {
   }
 }
 
+/*double *rotate_modern(size_t dim, double input[dim], int problem_num,*/
+/*cec_state_t *state) {*/
+/*double *output = calloc(dim, sizeof dim);*/
+/*for (size_t i = 0; i < dim; ++i) {*/
+/*for (size_t j = 0; j < dim; ++j) {*/
+/*output[i] =*/
+/*output[i] +*/
+/*input[j] * state->rotate_values_.data_[dim][problem_num][i * dim + j];*/
+/*}*/
+/*}*/
+/*return output;*/
+/*}*/
+
+/*double *apply_transformation_rate(size_t dim, double input[dim],*/
+/*double t_rate) {*/
+/*double *output = calloc(dim, sizeof dim);*/
+/*for (size_t i = 0; i < dim; ++i) {*/
+/*output[i] *= input[i] * t_rate;*/
+/*}*/
+/*return output;*/
+/*}*/
+
+/*double *shift_rotate_modern(size_t dim, double input[dim], int problem_num,*/
+/*cec_state_t *state, cec_affine_transforms_t info) {*/
+/*double *output = calloc(dim, sizeof dim);*/
+/*if (info.shift_ == true) {*/
+/*if (info.rotate_ == true) {*/
+/*output = shift_modern(dim, input, problem_num, state);*/
+/*output = apply_transformation_rate(dim, output, info.transform_rate_);*/
+/*output = rotate_modern(dim, output, problem_num, state);*/
+/*} else {*/
+/*output = shift_modern(dim, input, problem_num, state);*/
+/*output = apply_transformation_rate(dim, output, info.transform_rate_);*/
+/*}*/
+/*} else {*/
+/*if (info.rotate_ == 1) {*/
+/*output = apply_transformation_rate(dim, output, info.transform_rate_);*/
+/*output = rotate_modern(dim, output, problem_num, state);*/
+/*} else {*/
+/*output = apply_transformation_rate(dim, output, info.transform_rate_);*/
+/*}*/
+/*}*/
+
+/*return output;*/
+/*}*/
+
 void sr_func(double *x, double *sr_x, int nx, double *Os, double *Mr,
-                     double sh_rate, int s_flag, int r_flag, double *y) {
+             double sh_rate, int s_flag, int r_flag, double *y) {
   int i;
   if (s_flag == 1) {
     if (r_flag == 1) {
       shiftfunc(x, y, nx, Os);
-      for (i = 0; i < nx; i++) 
-      {
+      for (i = 0; i < nx; i++) {
         y[i] = y[i] * sh_rate;
       }
       rotatefunc(y, sr_x, nx, Mr);
     } else {
       shiftfunc(x, sr_x, nx, Os);
-      for (i = 0; i < nx; i++) 
-      {
+      for (i = 0; i < nx; i++) {
         sr_x[i] = sr_x[i] * sh_rate;
       }
     }
   } else {
 
     if (r_flag == 1) {
-      for (i = 0; i < nx; i++)
-      {
+      for (i = 0; i < nx; i++) {
         y[i] = x[i] * sh_rate;
       }
       rotatefunc(y, sr_x, nx, Mr);
     } else
-      for (i = 0; i < nx; i++)
-      {
+      for (i = 0; i < nx; i++) {
         sr_x[i] = x[i] * sh_rate;
       }
   }
 }
 
 void cf_cal(double *x, double *f, int nx, double *Os, double *delta,
-                    double *bias, double *fit, int cf_num) {
+            double *bias, double *fit, int cf_num) {
   int i, j;
   double *w;
   double w_max = 0, w_sum = 0;

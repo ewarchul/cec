@@ -7,21 +7,21 @@
  * - rotation (`rotatefunc`)
  * - shift (`shiftfunc`)
  * - shift & rotate (`sr_func`)
- * 
+ *
  * `asyfunc` and `osyfunc` are specific transformations for CEC2013. Check
  * technical raport for more information.
  *
  * `cf_cal` is helper function for complex functions.
  */
 
-
 #ifndef AFFINE_TRANS_H
 #define AFFINE_TRANS_H
 
-#include <stdlib.h>
+#include "types.h"
+#include <math.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
 
 #define INF 1.0e99
 #define EPS 1.0e-14
@@ -30,6 +30,13 @@
 #define M_PI 3.1415926535897932384626433832795029
 #endif
 
+double *rotate_modern(size_t dim, double input[dim], int problem_num,
+                      cec_state_t *state);
+double *apply_transformation_rate(size_t dim, double input[dim], double t_rate);
+double *shift_rotate_modern(size_t dim, double input[dim], int problem_num,
+                            cec_state_t *state, cec_affine_transforms_t info);
+double *shift_modern(size_t dim, double input[dim], int problem_num,
+                     cec_state_t *state);
 void shiftfunc(double *, double *, int, double *);
 void rotatefunc(double *, double *, int, double *);
 void sr_func(double *, double *, int, double *, double *, double, int, int,

@@ -28,6 +28,8 @@
 #define M_PI 3.1415926535897932384626433832795029
 #endif
 
+double sphere_func_modern(size_t dim, double input[dim]);
+
 void Lennard_Jones(double *, int, double *); 
 void Hilbert(double *, int, double *);       
 void Chebyshev(double *, int, double *);     

@@ -1,15 +1,16 @@
 #include "basic_funcs.h"
+#include "types.h"
+#include "affine_trans.h"
 
 void bent_cigar_func(double *x, double *f, int nx, double *Os, double *Mr,
                      int s_flag, int r_flag) /* Bent_Cigar */
 {
-  int i;
   double *y = malloc(nx * sizeof(double));
   double *z = malloc(nx * sizeof(double));
   sr_func(x, z, nx, Os, Mr, 1.0, s_flag, r_flag, y); /* shift and rotate */
 
   f[0] = z[0] * z[0];
-  for (i = 1; i < nx; i++) {
+  for (int i = 1; i < nx; ++i) {
     f[0] += pow(10.0, 6.0) * z[i] * z[i];
   }
   free(y);
@@ -29,6 +30,28 @@ void sphere_func(double *x, double *f, int nx, double *Os, double *Mr,
   free(y);
   free(z);
 }
+
+double sphere_func_modern(size_t dim, double input[dim]) {
+  double result = 0;
+  for (size_t i = 0; i < dim; ++i) {
+    result += input[i] * input[i];
+  }
+  return result;
+}
+
+/*double *apply_affine_transform(size_t dim, double input[dim], int problem_num,*/
+                               /*cec_state_t *state,*/
+                               /*cec_affine_transforms_t info) {*/
+  /*double *output = calloc(dim, dim * sizeof(double));*/
+  /*if (info.shift_rotate_) {*/
+    /*output = shift_rotate_modern(dim, input, problem_num, state, info);*/
+  /*} else if (info.rotate_) {*/
+    /*output = rotate_modern(dim, input, problem_num, state);*/
+  /*} else if (info.shift_) {*/
+    /*output = shift_modern(dim, input, problem_num, state);*/
+  /*}*/
+  /*return output;*/
+/*}*/
 
 void ellips_func(double *x, double *f, int nx, double *Os, double *Mr,
                  int s_flag, int r_flag) {
@@ -111,7 +134,7 @@ void dif_powers_func(double *x, double *f, int nx, double *Os, double *Mr,
   double *z = malloc(nx * sizeof(double));
   sr_func(x, z, nx, Os, Mr, 1.0, s_flag, r_flag, y);
   for (i = 0; i < nx; i++) {
-    f[0] += pow(fabs(z[i]), 2 + 4 * i / (nx - 1));
+    f[0] += pow(fabs(z[i]), 2 + 4.0 * i / (nx - 1));
   }
   f[0] = pow(f[0], 0.5);
   free(y);
@@ -143,7 +166,7 @@ void schaffer_F7_func(double *x, double *f, int nx, double *Os, double *Mr,
   double tmp;
   f[0] = 0.0;
   double *z = malloc(nx * sizeof(double));
-  sr_func(x, z, nx, Os, Mr, 1.0, s_flag, r_flag, y);        
+  sr_func(x, z, nx, Os, Mr, 1.0, s_flag, r_flag, y);
   for (i = 0; i < nx - 1; i++) {
     z[i] = pow(y[i] * y[i] + y[i + 1] * y[i + 1], 0.5);
     tmp = sin(50.0 * pow(z[i], 0.2));
@@ -477,7 +500,7 @@ void Hilbert(double *x, int D, double *f) {
     }
   }
 
-    f[0] += sum;
+  f[0] += sum;
 }
 
 void Chebyshev(double *x, int D, double *f) {
@@ -521,8 +544,8 @@ void step_rastrigin_func(double *x, double *f, int nx, double *Os, double *Mr,
   double *y = malloc(nx * sizeof(double));
   double *z = malloc(nx * sizeof(double));
   /*for (int i = 0; i < nx; i++) {*/
-    /*if (fabs(y[i] - Os[i]) > 0.5)*/
-      /*y[i] = Os[i] + floor(2 * (y[i] - Os[i]) + 0.5) / 2;*/
+  /*if (fabs(y[i] - Os[i]) > 0.5)*/
+  /*y[i] = Os[i] + floor(2 * (y[i] - Os[i]) + 0.5) / 2;*/
   /*}*/
   sr_func(x, z, nx, Os, Mr, 5.12 / 100.0, s_flag, r_flag, y);
   for (int i = 0; i < nx; i++) {

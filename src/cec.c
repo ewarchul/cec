@@ -1,5 +1,11 @@
 #include "cec.h"
 
+void print_vec(size_t n, double vec[n]) {
+  for (size_t i = 0; i < n; ++i) {
+    printf("vec[%zu] = %f\n", i, vec[i]);
+  }
+}
+
 void cec(char *extdatadir, int cecVersion, int problem, double *input, int col,
          int row, double *output, char *suite) {
 
@@ -9,6 +15,7 @@ void cec(char *extdatadir, int cecVersion, int problem, double *input, int col,
     for (int c = 0; c < col; c++) {
       x[c] = input[r + row * c];
     }
+    print_vec(col, x);
     switch (cecVersion) {
     case 2014:
       cec2014_interface(extdatadir, x, &output[r], col, row, problem);
