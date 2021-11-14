@@ -12,6 +12,7 @@ struct fpath {
 };
 
 typedef enum {
+  NONE,
   SHIFT_SUITE,
   ROTATE_SUITE,
   BIAS_SUITE,
@@ -29,12 +30,7 @@ typedef enum {
   CEC_2021 = 2021
 } cec_version_t;
 
-typedef enum {
-  SHIFT,
-  ROT,
-  SHUFFLE,
-  BIAS
-} cec_affineT_type_t;
+typedef enum { SHIFT, ROT, SHUFFLE, BIAS } cec_affineT_type_t;
 
 typedef long double numeric;
 
@@ -80,7 +76,6 @@ struct cec_benchmark_data_t {
 
 typedef struct cec_state_t cec_state_t;
 struct cec_state_t {
-  int dimensions_;
   cec_version_t version_;
   cec_suite_t suite_;
   cec_benchmark_data_t data_;
@@ -94,6 +89,5 @@ struct cec_benchmark_info_t {
   size_t dimension_nums_;
   int *dimensions_;
 };
-
 
 #endif

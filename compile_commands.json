@@ -1,0 +1,42 @@
+[
+{
+  "directory": "/home/ewarchul/Phd/software/cec/build",
+  "command": "/usr/local/bin/cc  -I/home/ewarchul/Phd/software/cec/include -Wall -fpic -fstack-protector-strong -g -O3 -Wextra -pedantic -Werror -o CMakeFiles/cec.dir/main.c.o -c /home/ewarchul/Phd/software/cec/main.c",
+  "file": "/home/ewarchul/Phd/software/cec/main.c"
+},
+{
+  "directory": "/home/ewarchul/Phd/software/cec/build",
+  "command": "/usr/local/bin/cc  -I/home/ewarchul/Phd/software/cec/include -Wall -fpic -fstack-protector-strong -g -O3 -Wextra -pedantic -Werror -o CMakeFiles/cec.dir/src/affine_trans.c.o -c /home/ewarchul/Phd/software/cec/src/affine_trans.c",
+  "file": "/home/ewarchul/Phd/software/cec/src/affine_trans.c"
+},
+{
+  "directory": "/home/ewarchul/Phd/software/cec/build",
+  "command": "/usr/local/bin/cc  -I/home/ewarchul/Phd/software/cec/include -Wall -fpic -fstack-protector-strong -g -O3 -Wextra -pedantic -Werror -o CMakeFiles/cec.dir/src/basic_funcs.c.o -c /home/ewarchul/Phd/software/cec/src/basic_funcs.c",
+  "file": "/home/ewarchul/Phd/software/cec/src/basic_funcs.c"
+},
+{
+  "directory": "/home/ewarchul/Phd/software/cec/build",
+  "command": "/usr/local/bin/cc  -I/home/ewarchul/Phd/software/cec/include -Wall -fpic -fstack-protector-strong -g -O3 -Wextra -pedantic -Werror -o CMakeFiles/cec.dir/src/cec.c.o -c /home/ewarchul/Phd/software/cec/src/cec.c",
+  "file": "/home/ewarchul/Phd/software/cec/src/cec.c"
+},
+{
+  "directory": "/home/ewarchul/Phd/software/cec/build",
+  "command": "/usr/local/bin/cc  -I/home/ewarchul/Phd/software/cec/include -Wall -fpic -fstack-protector-strong -g -O3 -Wextra -pedantic -Werror -o CMakeFiles/cec.dir/src/complex_funcs.c.o -c /home/ewarchul/Phd/software/cec/src/complex_funcs.c",
+  "file": "/home/ewarchul/Phd/software/cec/src/complex_funcs.c"
+},
+{
+  "directory": "/home/ewarchul/Phd/software/cec/build",
+  "command": "/usr/local/bin/cc  -I/home/ewarchul/Phd/software/cec/include -Wall -fpic -fstack-protector-strong -g -O3 -Wextra -pedantic -Werror -o CMakeFiles/cec.dir/src/hybrid_funcs.c.o -c /home/ewarchul/Phd/software/cec/src/hybrid_funcs.c",
+  "file": "/home/ewarchul/Phd/software/cec/src/hybrid_funcs.c"
+},
+{
+  "directory": "/home/ewarchul/Phd/software/cec/build",
+  "command": "/usr/local/bin/cc  -I/home/ewarchul/Phd/software/cec/include -Wall -fpic -fstack-protector-strong -g -O3 -Wextra -pedantic -Werror -o CMakeFiles/cec.dir/src/interfaces.c.o -c /home/ewarchul/Phd/software/cec/src/interfaces.c",
+  "file": "/home/ewarchul/Phd/software/cec/src/interfaces.c"
+},
+{
+  "directory": "/home/ewarchul/Phd/software/cec/build",
+  "command": "/usr/local/bin/cc  -I/home/ewarchul/Phd/software/cec/include -Wall -fpic -fstack-protector-strong -g -O3 -Wextra -pedantic -Werror -o CMakeFiles/cec.dir/src/utils.c.o -c /home/ewarchul/Phd/software/cec/src/utils.c",
+  "file": "/home/ewarchul/Phd/software/cec/src/utils.c"
+}
+]

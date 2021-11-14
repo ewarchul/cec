@@ -3,6 +3,7 @@
 
 #include "interfaces.h"
 #include "utils.h"
+#include "io.h"
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>

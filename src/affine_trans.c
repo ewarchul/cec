@@ -7,14 +7,18 @@ void shiftfunc(double *x, double *xshift, int nx, double *Os) {
   }
 }
 
-/*double *shift_modern(size_t dim, double input[dim], int problem_num,*/
-/*cec_state_t *state) {*/
-/*double *output = calloc(dim, sizeof dim);*/
-/*for (size_t i = 0; i < dim; ++i) {*/
-/*output[i] = input[i] - state->shift_values_.data_[dim][problem_num][i];*/
-/*}*/
-/*return output;*/
-/*}*/
+// TODO fix problem with dimension indices
+
+double *shift_modern(size_t dim, double input[dim], int problem_num,
+                     cec_state_t *state) {
+  //double *output = calloc(10, sizeof(double));
+  double *output = malloc(dim * sizeof(double));
+  for (size_t i = 0; i < dim; ++i) {
+    output[i] =
+        input[i] - state->data_.shifts_[0].data_[problem_num - 1].data_[i];
+  }
+  return output;
+}
 
 void rotatefunc(double *x, double *xrot, int nx, double *Mr) {
   int i, j;
