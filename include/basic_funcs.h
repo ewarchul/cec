@@ -5,21 +5,20 @@
  * vector. Additional parameters are the same as for hybrid and complex
  * function.
  *
- * Basic functions are building blocks for hybrid and complex function. 
+ * Basic functions are building blocks for hybrid and complex function.
  * More information about basic functions contain technical documentations of
  * CEC benchmarks.
  *
  */
 
-
 #ifndef BASIC_FUNCS_H
 #define BASIC_FUNCS_H
 
 #include "affine_trans.h"
-#include <stdlib.h>
+#include <math.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <math.h>
+#include <stdlib.h>
 
 #define INF 1.0e99
 #define EPS 1.0e-14
@@ -30,21 +29,31 @@
 
 double sphere_func_modern(size_t dim, double input[dim]);
 numeric bent_cigar_func_modern(size_t dim, numeric input[dim]);
+double sum_diff_pow_func_modern(size_t dim, numeric input[dim]);
+double zakharov_func_modern(size_t dim, numeric input[dim]);
+double rosenbrock_func_modern(size_t dim, numeric input[dim]);
+double rastrigin_func_modern(size_t dim, numeric input[dim]);
+double schaffer_F7_func_modern(size_t dim, numeric input[dim],
+                               numeric shifted_input[dim]);
+double step_rastrigin_func_modern(size_t dim, numeric input[dim]);
+double levy_func_modern(size_t dim, numeric input[dim]);
+double schwefel_func_modern(size_t dim, numeric input[dim]);
 
-void Lennard_Jones(double *, int, double *); 
-void Hilbert(double *, int, double *);       
-void Chebyshev(double *, int, double *);     
+void Lennard_Jones(double *, int, double *);
+void Hilbert(double *, int, double *);
+void Chebyshev(double *, int, double *);
 void sphere_func(double *, double *, int, double *, double *, int, int);
 void ellips_func(double *, double *, int, double *, double *, int, int);
 void bent_cigar_func(double *, double *, int, double *, double *, int, int);
 
-
-void cec2017_bent_cigar_func(double *, double *, int, double *, double *, int, int);
+void cec2017_bent_cigar_func(double *, double *, int, double *, double *, int,
+                             int);
 
 void discus_func(double *, double *, int, double *, double *, int, int);
 void dif_powers_func(double *, double *, int, double *, double *, int, int);
 void rosenbrock_func(double *, double *, int, double *, double *, int, int);
-void schaffer_F7_func(double *, double *, int, double *, double *, int, int, double *);
+void schaffer_F7_func(double *, double *, int, double *, double *, int, int,
+                      double *);
 void ackley_func(double *, double *, int, double *, double *, int, int);
 void rastrigin_func(double *, double *, int, double *, double *, int, int);
 void weierstrass_func(double *, double *, int, double *, double *, int, int);

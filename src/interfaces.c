@@ -1,37 +1,81 @@
 #include "interfaces.h"
+#include "affine_trans.h"
 #include "basic_funcs.h"
+#include "types.h"
 #include "utils.h"
-
 
 numeric cec_eval(int fn, numeric *input, cec_state_t *state) {
   numeric output = 1;
   switch (state->version_) {
-    case CEC_2017:
-      output = cec_interface_2017(fn, input, state); 
-      break;
+  case CEC_2017:
+    output = cec_interface_2017(fn, input, state);
+    break;
   }
   return output;
 }
 
-
-numeric cec_interface_2017(int fn, numeric* input, cec_state_t *state) {
+numeric cec_interface_2017(int fn, numeric *input, cec_state_t *state) {
   numeric output = 0;
+  double opt_vals[30] = {100,  200,  300,  400,  500,  600,  700,  800,
+                         900,  1000, 1100, 1200, 1300, 1400, 1500, 1600,
+                         1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400,
+                         2500, 2600, 2700, 2800, 2900, 3000};
   switch (fn) {
-    case 1: {
-      output = bent_cigar_func_modern(state->dimension_, input);
-      break;
-    }
+  case 1: {
+    double *shiftrot = shift_rotate_modern(input, fn, state,
+        (cec_affine_transforms_t){
+          .rotate_ = true,
+          .shift_ = true,
+          .transform_rate_ = 1
+        });
+    output = bent_cigar_func_modern(state->dimension_, shiftrot);
+    break;
   }
-  return output;
+  case 2: {
+    output = sum_diff_pow_func_modern(state->dimension_, input);
+    break;
+  }
+  case 3: {
+    output = zakharov_func_modern(state->dimension_, input);
+    break;
+  }
+  case 4: {
+    output = rosenbrock_func_modern(state->dimension_, input);
+    break;
+  }
+  case 5: {
+    output = rastrigin_func_modern(state->dimension_, input);
+    break;
+  }
+  case 6: {
+    output = schaffer_F7_func_modern(state->dimension_, input, input);
+    break;
+  }
+  case 7: {
+    output = bent_cigar_func_modern(state->dimension_, input);
+    break;
+  }
+  case 8: {
+    output = step_rastrigin_func_modern(state->dimension_, input);
+    break;
+  }
+  case 9: {
+    output = levy_func_modern(state->dimension_, input);
+    break;
+  }
+  case 10: {
+    output = schwefel_func_modern(state->dimension_, input);
+    break;
+  }
+  }
+  return output + opt_vals[fn];
 }
-
 
 CecData cd = {
     .prevDimension = 0,
     .prevFunction = 0,
     .dataLoaded = 0,
 };
-
 
 void cec2014_interface(char *datapath, double *x, double *f, int nx, int mx,
                        int func_num) {
@@ -209,7 +253,7 @@ void cec2015_interface(char *datapath, double *x, double *f, int nx, int mx,
   }
 
   int cf_nums[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 5, 5, 5, 7, 10};
-  int bShuffle[] = {0, 0,0,0,0,0,1,1,1,0,1, 0, 0, 1, 0, 0};
+  int bShuffle[] = {0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0};
   int biasFlag = cf_nums[func_num] > 1 ? 1 : 0;
   int shuffleFlag = bShuffle[func_num] == 1 ? 1 : 0;
 
@@ -582,7 +626,7 @@ void cec2021_interface(char *datapath, double *x, double *f, int nx, int mx,
     cd.prevDimension = nx;
     cd.dataLoaded = 1;
   }
- 
+
   int shiftFlag = 0;
   if (!strcmp(suite, "bias_shift") || !strcmp(suite, "shift") ||
       !strcmp(suite, "bias_shift_rot") || !strcmp(suite, "shift_rot")) {
