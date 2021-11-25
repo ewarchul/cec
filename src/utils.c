@@ -5,10 +5,13 @@
 
 #define dsize 32
 
-cec_state_t cec_mk_state(cec_version_t version, cec_suite_t suite) {
-  cec_state_t state = {.suite_ = suite,
-                       .version_ = version,
-                       .data_ = cec_load_benchmark_data(CEC_2017)};
+cec_state_t cec_mk_state(cec_version_t version, int dimension, cec_suite_t suite) {
+  cec_state_t state = {
+    .suite_ = suite,
+    .version_ = version,
+    .dimension_ = dimension,
+    .data_ = cec_load_benchmark_data(CEC_2017),
+  };
   return state;
 }
 

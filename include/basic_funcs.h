@@ -29,7 +29,7 @@
 #endif
 
 double sphere_func_modern(size_t dim, double input[dim]);
-double bent_cigar_func_modern(size_t dim, double input[dim]);
+numeric bent_cigar_func_modern(size_t dim, numeric input[dim]);
 
 void Lennard_Jones(double *, int, double *); 
 void Hilbert(double *, int, double *);       

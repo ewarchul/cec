@@ -29,7 +29,7 @@ cec_external_data_t cec_read_external_data(cec_version_t version, int dim,
   size_t size = dim * dim * 10;
   numeric *data = malloc(size * sizeof(numeric));
   for (size_t i = 0; i < size; ++i) {
-    if (fscanf(fhandler, "%LF", &data[i]) == -1) {
+    if (fscanf(fhandler, "%lf", &data[i]) == -1) {
       break;
     }
   }

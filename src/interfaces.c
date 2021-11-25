@@ -1,6 +1,37 @@
 #include "interfaces.h"
+#include "basic_funcs.h"
+#include "utils.h"
 
-extern CecData cd;
+
+numeric cec_eval(int fn, numeric *input, cec_state_t *state) {
+  numeric output = 1;
+  switch (state->version_) {
+    case CEC_2017:
+      output = cec_interface_2017(fn, input, state); 
+      break;
+  }
+  return output;
+}
+
+
+numeric cec_interface_2017(int fn, numeric* input, cec_state_t *state) {
+  numeric output = 0;
+  switch (fn) {
+    case 1: {
+      output = bent_cigar_func_modern(state->dimension_, input);
+      break;
+    }
+  }
+  return output;
+}
+
+
+CecData cd = {
+    .prevDimension = 0,
+    .prevFunction = 0,
+    .dataLoaded = 0,
+};
+
 
 void cec2014_interface(char *datapath, double *x, double *f, int nx, int mx,
                        int func_num) {

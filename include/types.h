@@ -32,7 +32,9 @@ typedef enum {
 
 typedef enum { SHIFT, ROT, SHUFFLE, BIAS } cec_affineT_type_t;
 
-typedef long double numeric;
+typedef double numeric;
+
+typedef numeric (*eval_fn_t)(int fn, numeric *input);
 
 typedef struct cec_interface_t cec_interface_t;
 
@@ -78,10 +80,10 @@ typedef struct cec_state_t cec_state_t;
 struct cec_state_t {
   cec_version_t version_;
   cec_suite_t suite_;
+  int dimension_;
   cec_benchmark_data_t data_;
 };
 
-typedef double (*function_t)(size_t n, double input[n]);
 
 typedef struct cec_benchmark_info_t cec_benchmark_info_t;
 struct cec_benchmark_info_t {

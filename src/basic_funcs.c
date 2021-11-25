@@ -1,6 +1,6 @@
 #include "basic_funcs.h"
-#include "types.h"
 #include "affine_trans.h"
+#include "types.h"
 
 void bent_cigar_func(double *x, double *f, int nx, double *Os, double *Mr,
                      int s_flag, int r_flag) /* Bent_Cigar */
@@ -17,11 +17,11 @@ void bent_cigar_func(double *x, double *f, int nx, double *Os, double *Mr,
   free(z);
 }
 
-double bent_cigar_func_modern(size_t dim, double input[dim]) {
+numeric bent_cigar_func_modern(size_t dim, numeric *input) {
   double result = 0;
   result = input[0] * input[0];
   for (size_t i = 1; i < dim; ++i) {
-  result += pow(10.0, 6.0) * input[i] * input[i];
+    result += pow(10.0, 6.0) * input[i] * input[i];
   }
   return result;
 }
@@ -48,18 +48,19 @@ double sphere_func_modern(size_t dim, double input[dim]) {
   return result;
 }
 
-/*double *apply_affine_transform(size_t dim, double input[dim], int problem_num,*/
-                               /*cec_state_t *state,*/
-                               /*cec_affine_transforms_t info) {*/
-  /*double *output = calloc(dim, dim * sizeof(double));*/
-  /*if (info.shift_rotate_) {*/
-    /*output = shift_rotate_modern(dim, input, problem_num, state, info);*/
-  /*} else if (info.rotate_) {*/
-    /*output = rotate_modern(dim, input, problem_num, state);*/
-  /*} else if (info.shift_) {*/
-    /*output = shift_modern(dim, input, problem_num, state);*/
-  /*}*/
-  /*return output;*/
+/*double *apply_affine_transform(size_t dim, double input[dim], int
+ * problem_num,*/
+/*cec_state_t *state,*/
+/*cec_affine_transforms_t info) {*/
+/*double *output = calloc(dim, dim * sizeof(double));*/
+/*if (info.shift_rotate_) {*/
+/*output = shift_rotate_modern(dim, input, problem_num, state, info);*/
+/*} else if (info.rotate_) {*/
+/*output = rotate_modern(dim, input, problem_num, state);*/
+/*} else if (info.shift_) {*/
+/*output = shift_modern(dim, input, problem_num, state);*/
+/*}*/
+/*return output;*/
 /*}*/
 
 void ellips_func(double *x, double *f, int nx, double *Os, double *Mr,

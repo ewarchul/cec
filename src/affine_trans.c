@@ -7,15 +7,33 @@ void shiftfunc(double *x, double *xshift, int nx, double *Os) {
   }
 }
 
-// TODO fix problem with dimension indices
+static inline int cec_dimension_idx(int dim) {
+  int index = -1;
+  switch (dim) {
+  case 10:
+    index = 0;
+    break;
+  case 30:
+    index = 1;
+    break;
+  case 50:
+    index = 2;
+    break;
+  case 100:
+    index = 3;
+    break;
+  }
+  return index;
+}
 
-double *shift_modern(size_t dim, double input[dim], int problem_num,
-                     cec_state_t *state) {
-  //double *output = calloc(10, sizeof(double));
-  double *output = malloc(dim * sizeof(double));
+inline double *shift_modern(double *input, int problem_num,
+                            cec_state_t *state) {
+  int dim = state->dimension_;
+  double *output = calloc(dim, sizeof(double));
   for (size_t i = 0; i < dim; ++i) {
-    output[i] =
-        input[i] - state->data_.shifts_[0].data_[problem_num - 1].data_[i];
+    output[i] = input[i] - state->data_.shifts_[cec_dimension_idx(dim)]
+                               .data_[problem_num - 1]
+                               .data_[i];
   }
   return output;
 }
@@ -30,51 +48,57 @@ void rotatefunc(double *x, double *xrot, int nx, double *Mr) {
   }
 }
 
-/*double *rotate_modern(size_t dim, double input[dim], int problem_num,*/
-/*cec_state_t *state) {*/
-/*double *output = calloc(dim, sizeof dim);*/
-/*for (size_t i = 0; i < dim; ++i) {*/
-/*for (size_t j = 0; j < dim; ++j) {*/
-/*output[i] =*/
-/*output[i] +*/
-/*input[j] * state->rotate_values_.data_[dim][problem_num][i * dim + j];*/
-/*}*/
-/*}*/
-/*return output;*/
-/*}*/
+inline double *rotate_modern(double *input, int problem_num,
+                             cec_state_t *state) {
 
-/*double *apply_transformation_rate(size_t dim, double input[dim],*/
-/*double t_rate) {*/
-/*double *output = calloc(dim, sizeof dim);*/
-/*for (size_t i = 0; i < dim; ++i) {*/
-/*output[i] *= input[i] * t_rate;*/
-/*}*/
-/*return output;*/
-/*}*/
+  int dim = state->dimension_;
+  double *output = calloc(dim, sizeof(double));
+  for (size_t i = 0; i < dim; ++i) {
+    output[i] = 0;
+    for (size_t j = 0; j < dim; ++j) {
+      output[i] =
+          output[i] + input[j] * state->data_.rotates_[cec_dimension_idx(dim)]
+                                     .data_[problem_num - 1]
+                                     .data_[i * dim + j];
+    }
+  }
+  return output;
+}
 
-/*double *shift_rotate_modern(size_t dim, double input[dim], int problem_num,*/
-/*cec_state_t *state, cec_affine_transforms_t info) {*/
-/*double *output = calloc(dim, sizeof dim);*/
-/*if (info.shift_ == true) {*/
-/*if (info.rotate_ == true) {*/
-/*output = shift_modern(dim, input, problem_num, state);*/
-/*output = apply_transformation_rate(dim, output, info.transform_rate_);*/
-/*output = rotate_modern(dim, output, problem_num, state);*/
-/*} else {*/
-/*output = shift_modern(dim, input, problem_num, state);*/
-/*output = apply_transformation_rate(dim, output, info.transform_rate_);*/
-/*}*/
-/*} else {*/
-/*if (info.rotate_ == 1) {*/
-/*output = apply_transformation_rate(dim, output, info.transform_rate_);*/
-/*output = rotate_modern(dim, output, problem_num, state);*/
-/*} else {*/
-/*output = apply_transformation_rate(dim, output, info.transform_rate_);*/
-/*}*/
-/*}*/
+inline double *apply_transformation_rate(size_t dim, double *input,
+                                         double t_rate) {
+  double *output = calloc(dim, sizeof(double));
+  for (size_t i = 0; i < dim; ++i) {
+    output[i] = input[i] * t_rate;
+  }
+  return output;
+}
 
-/*return output;*/
-/*}*/
+inline double *shift_rotate_modern(double *input, int problem_num,
+                                   cec_state_t *state,
+                                   cec_affine_transforms_t info) {
+  int dim = state->dimension_;
+  double *output = calloc(dim, sizeof(double));
+  if (info.shift_) {
+    if (info.rotate_) {
+      output = shift_modern(input, problem_num, state);
+      output = apply_transformation_rate(dim, output, info.transform_rate_);
+      output = rotate_modern(output, problem_num, state);
+    } else {
+      output = shift_modern(input, problem_num, state);
+      output = apply_transformation_rate(dim, output, info.transform_rate_);
+    }
+  } else {
+    if (info.rotate_) {
+      output = apply_transformation_rate(dim, output, info.transform_rate_);
+      output = rotate_modern(output, problem_num, state);
+    } else {
+      output = apply_transformation_rate(dim, output, info.transform_rate_);
+    }
+  }
+
+  return output;
+}
 
 void sr_func(double *x, double *sr_x, int nx, double *Os, double *Mr,
              double sh_rate, int s_flag, int r_flag, double *y) {

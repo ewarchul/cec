@@ -12,8 +12,10 @@
 #include <string.h>
 
 
-cec_state_t cec_mk_state(cec_version_t version, cec_suite_t suite);
+cec_state_t cec_mk_state(cec_version_t version, int dimension, cec_suite_t suite);
 cec_benchmark_info_t cec_mk_benchmark_info(cec_version_t version);
+
+double eval_id(int fn, double *input);
 
 typedef struct CecData CecData;
 struct CecData {

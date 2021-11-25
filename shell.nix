@@ -3,7 +3,6 @@
     buildInputs = with pkgs; [
       gcc
       cmake
-      cmocka
       ninja
       gdb
       valgrind

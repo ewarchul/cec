@@ -28,6 +28,9 @@
 #include <stdio.h>
 #include <string.h>
 
+numeric cec_eval(int fn, numeric *input, cec_state_t *state);
+numeric cec_interface_2017(int fn, numeric* input, cec_state_t *state);
+
 void cec2013_interface(char *, double *, double *, int, int, int);
 void cec2014_interface(char *, double *, double *, int, int, int);
 void cec2015_interface(char *, double *, double *, int, int, int);
