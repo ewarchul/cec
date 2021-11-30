@@ -12,8 +12,8 @@
 
 int main() {
   cec_state_t state = cec_mk_state(CEC_2017, 10, NONE);
-  numeric input[10] = {[0 ... 9] = 1};
-  double result = cec_eval(1, input, &state);
+  double input[10] = {[0 ... 9] = 1};
+  double result = cec_eval(11, input, &state);
   printf("%lf\n", result);
   return 0;
 }

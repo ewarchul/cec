@@ -20,51 +20,88 @@ numeric cec_interface_2017(int fn, numeric *input, cec_state_t *state) {
                          900,  1000, 1100, 1200, 1300, 1400, 1500, 1600,
                          1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400,
                          2500, 2600, 2700, 2800, 2900, 3000};
+  cec_affine_transforms_t affine_transforms = {
+      .rotate_ = true, .shift_ = true, .transform_rate_ = 1};
+  double *shiftrot = shift_rotate_modern(input, fn, state, affine_transforms);
   switch (fn) {
   case 1: {
-    double *shiftrot = shift_rotate_modern(input, fn, state,
-        (cec_affine_transforms_t){
-          .rotate_ = true,
-          .shift_ = true,
-          .transform_rate_ = 1
-        });
     output = bent_cigar_func_modern(state->dimension_, shiftrot);
     break;
   }
   case 2: {
-    output = sum_diff_pow_func_modern(state->dimension_, input);
+    output = sum_diff_pow_func_modern(state->dimension_, shiftrot);
     break;
   }
   case 3: {
-    output = zakharov_func_modern(state->dimension_, input);
+    output = zakharov_func_modern(state->dimension_, shiftrot);
     break;
   }
   case 4: {
-    output = rosenbrock_func_modern(state->dimension_, input);
+    output = rosenbrock_func_modern(state->dimension_, shiftrot);
     break;
   }
   case 5: {
-    output = rastrigin_func_modern(state->dimension_, input);
+    output = rastrigin_func_modern(state->dimension_, shiftrot);
     break;
   }
   case 6: {
-    output = schaffer_F7_func_modern(state->dimension_, input, input);
+    output = schaffer_F7_func_modern(state->dimension_, input, shiftrot);
     break;
   }
   case 7: {
-    output = bent_cigar_func_modern(state->dimension_, input);
+    output = bent_cigar_func_modern(state->dimension_, shiftrot);
     break;
   }
   case 8: {
-    output = step_rastrigin_func_modern(state->dimension_, input);
+    output = step_rastrigin_func_modern(state->dimension_, shiftrot);
     break;
   }
   case 9: {
-    output = levy_func_modern(state->dimension_, input);
+    output = levy_func_modern(state->dimension_, shiftrot);
     break;
   }
   case 10: {
-    output = schwefel_func_modern(state->dimension_, input);
+    output = schwefel_func_modern(state->dimension_, shiftrot);
+    break;
+  }
+  case 11: {
+    output = cec2017_hf01_modern(state->dimension_, shiftrot, state);
+    break;
+  }
+  case 12: {
+    output = schwefel_func_modern(state->dimension_, shiftrot);
+    break;
+  }
+  case 13: {
+    output = schwefel_func_modern(state->dimension_, shiftrot);
+    break;
+  }
+  case 14: {
+    output = schwefel_func_modern(state->dimension_, shiftrot);
+    break;
+  }
+  case 15: {
+    output = schwefel_func_modern(state->dimension_, shiftrot);
+    break;
+  }
+  case 16: {
+    output = schwefel_func_modern(state->dimension_, shiftrot);
+    break;
+  }
+  case 17: {
+    output = schwefel_func_modern(state->dimension_, shiftrot);
+    break;
+  }
+  case 18: {
+    output = schwefel_func_modern(state->dimension_, shiftrot);
+    break;
+  }
+  case 19: {
+    output = schwefel_func_modern(state->dimension_, shiftrot);
+    break;
+  }
+  case 20: {
+    output = schwefel_func_modern(state->dimension_, shiftrot);
     break;
   }
   }

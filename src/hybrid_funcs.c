@@ -1,4 +1,7 @@
 #include "hybrid_funcs.h"
+#include "affine_trans.h"
+#include "basic_funcs.h"
+#include "types.h"
 
 void cec2014_hf01(double *x, double *f, int nx, double *Os, double *Mr, int *S,
                   int s_flag, int r_flag) {
@@ -422,6 +425,43 @@ void cec2017_hf01(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   }
   free(y);
   free(z);
+}
+
+double cec2017_hf01_modern(size_t dim, double *input, cec_state_t *state) {
+  int tmp, cf_num = 3;
+  int G[3], G_nx[3];
+  double Gp[3] = {0.2, 0.4, 0.4};
+
+  tmp = 0;
+  for (int i = 0; i < cf_num - 1; i++) {
+    G_nx[i] = ceil(Gp[i] * dim);
+    tmp += G_nx[i];
+  }
+  G_nx[cf_num - 1] = dim - tmp;
+  G[0] = 0;
+  for (int i = 1; i < cf_num; i++) {
+    G[i] = G[i - 1] + G_nx[i - 1];
+  }
+  int idxs[] = {7, 5, 10, 8, 2, 9, 6, 4, 1, 3};
+
+  for (int i = 0; i < dim; ++i) {
+
+  }
+
+  double *shiftrot_y1 = shift_rotate_modern(
+      input, -1, state, (cec_affine_transforms_t){.transform_rate_ = 1.0});
+  double *shiftrot_y2 = shift_rotate_modern(
+      input, -1, state,
+      (cec_affine_transforms_t){.transform_rate_ = 2.048 / 100.0});
+  double *shiftrot_y3 = shift_rotate_modern(
+      input, -1, state,
+      (cec_affine_transforms_t){.transform_rate_ = 5.12 / 100.0});
+
+  double y1 = zakharov_func_modern(G_nx[0], (shiftrot_y1 + G[0]));
+  double y2 = rosenbrock_func_modern(G_nx[1], (shiftrot_y2 + G[1]));
+  double y3 = rastrigin_func_modern(G_nx[2], (shiftrot_y3 + G[2]));
+  double output = y1 + y2 + y3;
+  return output;
 }
 
 void cec2017_hf02(double *x, double *f, int nx, double *Os, double *Mr, int *S,
