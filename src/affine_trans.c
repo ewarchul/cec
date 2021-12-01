@@ -7,42 +7,6 @@ void shiftfunc(double *x, double *xshift, int nx, double *Os) {
   }
 }
 
-// TODO: optimize
-
-int cec_dimension_idx(int dim) {
-  int index = -1;
-  switch (dim) {
-  case 10:
-    index = 0;
-    break;
-  case 30:
-    index = 1;
-    break;
-  case 50:
-    index = 2;
-    break;
-  case 100:
-    index = 3;
-    break;
-  }
-  return index;
-}
-
-
-// TODO: optimize
-
-inline double *shift_modern(double *input, int problem_num,
-                            cec_state_t *state) {
-  int dim = state->dimension_;
-  double *output = calloc(dim, sizeof(double));
-  for (int i = 0; i < dim; ++i) {
-    output[i] = input[i] - state->data_.shifts_[cec_dimension_idx(dim)]
-                               .data_[problem_num - 1]
-                               .data_[i];
-  }
-  return output;
-}
-
 void rotatefunc(double *x, double *xrot, int nx, double *Mr) {
   int i, j;
   for (i = 0; i < nx; i++) {
@@ -51,82 +15,6 @@ void rotatefunc(double *x, double *xrot, int nx, double *Mr) {
       xrot[i] = xrot[i] + x[j] * Mr[i * nx + j];
     }
   }
-}
-
-
-// TODO: optimize
-
-inline double *rotate_modern(double *input, int problem_num,
-                             cec_state_t *state) {
-
-  int dim = state->dimension_;
-  double *output = calloc(dim, sizeof(double));
-  for (int i = 0; i < dim; ++i) {
-    output[i] = 0;
-    for (int j = 0; j < dim; ++j) {
-      output[i] =
-          output[i] + input[j] * state->data_.rotates_[cec_dimension_idx(dim)]
-                                     .data_[problem_num - 1]
-                                     .data_[i * dim + j];
-    }
-  }
-  return output;
-}
-
-
-// TODO: optimize
-
-inline double *apply_transformation_rate(size_t dim, double *input,
-                                         double t_rate) {
-  double *output = calloc(dim, sizeof(double));
-  for (size_t i = 0; i < dim; ++i) {
-    output[i] = input[i] * t_rate;
-  }
-  return output;
-}
-
-
-// TODO: optimize
-
-inline double *shuffle_modern(size_t dim, int fn, double *input,
-                              cec_state_t *state) {
-  double *output = calloc(dim, sizeof(double));
-  for (size_t i = 0; i < dim; ++i) {
-    int index =
-        state->data_.shuffles_[cec_dimension_idx(dim)].data_[fn - 1].data_[i] -
-        1;
-    output[i] = input[index];
-  }
-  return output;
-}
-
-
-// TODO: optimize
-
-inline double *shift_rotate_modern(double *input, int problem_num,
-                                   cec_state_t *state,
-                                   cec_affine_transforms_t info) {
-  int dim = state->dimension_;
-  double *output = calloc(dim, sizeof(double));
-  if (info.shift_) {
-    if (info.rotate_) {
-      output = shift_modern(input, problem_num, state);
-      output = apply_transformation_rate(dim, output, info.transform_rate_);
-      output = rotate_modern(output, problem_num, state);
-    } else {
-      output = shift_modern(input, problem_num, state);
-      output = apply_transformation_rate(dim, output, info.transform_rate_);
-    }
-  } else {
-    if (info.rotate_) {
-      output = apply_transformation_rate(dim, output, info.transform_rate_);
-      output = rotate_modern(output, problem_num, state);
-    } else {
-      output = apply_transformation_rate(dim, output, info.transform_rate_);
-    }
-  }
-
-  return output;
 }
 
 void sr_func(double *x, double *sr_x, int nx, double *Os, double *Mr,

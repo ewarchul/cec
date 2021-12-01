@@ -13,8 +13,8 @@
 #include <time.h>
 
 #define REP 1
-#define BENCH_ITERS 100000
-#define FN 12
+#define BENCH_ITERS 10000
+#define FN 11
 
 extern CecData cd;
 
@@ -23,6 +23,14 @@ int main() {
   double output[10];
   cec_state_t state = cec_mk_state(CEC_2017, 10, NONE);
 
+  clock_t start_time = clock();
+  double result = 0;
+  for (int i = 0; i < BENCH_ITERS; ++i) {
+    result = cec_eval(FN, input, &state);
+  }
+  clock_t end_time = clock();
+  double elapsed_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+
   clock_t start_time_old = clock();
   for (int i = 0; i < BENCH_ITERS; ++i) {
     cec2017_interface("../data/cec2017", input, output, 10, 1, FN);
@@ -30,15 +38,10 @@ int main() {
   double elapsed_time_old = (double)(clock() - start_time_old) / CLOCKS_PER_SEC;
   printf("[CEC OLD] Done in %lf secs\n", elapsed_time_old);
 
-  clock_t start_time = clock();
-  double result = 0;
-  for (int i = 0; i < BENCH_ITERS; ++i) {
-    result = cec_eval(FN, input, &state);
-  }
-  double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
+
   printf("[CEC NEW] Done in %lf secs\n", elapsed_time);
 
-  printf("speedup [pct] = %lf\n", (elapsed_time_old + 0.0001/ elapsed_time));
+  printf("speedup [pct] = %lf\n", (elapsed_time_old / elapsed_time));
   printf("Solution: NEW -> %lf =?= OLD -> %lf\n", result, output[0]);
 
   return 0;
