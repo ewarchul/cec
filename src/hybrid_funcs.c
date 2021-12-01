@@ -474,10 +474,33 @@ double cec2017_hf01_modern(size_t dim, int fn, double *input,
   double y_1 = rosenbrock_func_modern(shuffles.partition_idx_[1],
                                       (tmp + shuffles.shifts_[1]));
 
-  
   double *tmp2 = apply_transformation_rate(10, shuffled, 5.12 / 100.0);
   double y_2 = rastrigin_func_modern(shuffles.partition_idx_[2],
                                      (tmp2 + shuffles.shifts_[2]));
+
+  return y_0 + y_1 + y_2;
+}
+
+double cec2017_hf02_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[3] = {0.3, 0.3, 0.4};
+  cec_shuffles_t shuffles = mk_shuffles(dim, 3, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = ellips_func_modern(shuffles.partition_idx_[0],
+                                  (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 10.0);
+
+  double y_1 = schwefel_func_modern(shuffles.partition_idx_[1],
+                                    (tmp + shuffles.shifts_[1]));
+
+  double y_2 = bent_cigar_func_modern(shuffles.partition_idx_[2],
+                                      (shuffled + shuffles.shifts_[2]));
 
   return y_0 + y_1 + y_2;
 }

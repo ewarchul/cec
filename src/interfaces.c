@@ -69,7 +69,7 @@ numeric cec_interface_2017(int fn, numeric *input, cec_state_t *state) {
     break;
   }
   case 12: {
-    output = schwefel_func_modern(state->dimension_, shiftrot);
+    output = cec2017_hf02_modern(state->dimension_, fn, input, state);
     break;
   }
   case 13: {

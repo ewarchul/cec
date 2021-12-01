@@ -19,6 +19,15 @@ double sphere_func_modern(size_t dim, double input[dim]) {
   return result;
 }
 
+double ellips_func_modern(size_t dim, double input[dim]) {
+  double output = 0;
+  for (size_t i = 0; i < dim; ++i) {
+    output += pow(10.0, 6.0 * i / (dim - 1)) * input[i] * input[i];
+  }
+  return output;
+}
+
+
 double sum_diff_pow_func_modern(size_t dim, double *input) {
   double output = -1;
   for (size_t i = 0; i < dim; ++i) {

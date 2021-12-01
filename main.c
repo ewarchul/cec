@@ -13,8 +13,8 @@
 #include <time.h>
 
 #define REP 1
-#define BENCH_ITERS 1
-#define FN 1
+#define BENCH_ITERS 100000
+#define FN 12
 
 extern CecData cd;
 
@@ -38,7 +38,7 @@ int main() {
   double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
   printf("[CEC NEW] Done in %lf secs\n", elapsed_time);
 
-  printf("speedup [pct] = %lf\n", (elapsed_time_old / elapsed_time));
+  printf("speedup [pct] = %lf\n", (elapsed_time_old + 0.0001/ elapsed_time));
   printf("Solution: NEW -> %lf =?= OLD -> %lf\n", result, output[0]);
 
   return 0;

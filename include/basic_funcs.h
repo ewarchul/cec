@@ -29,6 +29,7 @@
 
 double sphere_func_modern(size_t dim, double input[dim]);
 numeric bent_cigar_func_modern(size_t dim, numeric input[dim]);
+double ellips_func_modern(size_t dim, double input[dim]);
 double sum_diff_pow_func_modern(size_t dim, numeric input[dim]);
 double zakharov_func_modern(size_t dim, numeric input[dim]);
 double rosenbrock_func_modern(size_t dim, numeric input[dim]);

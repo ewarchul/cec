@@ -7,6 +7,8 @@ void shiftfunc(double *x, double *xshift, int nx, double *Os) {
   }
 }
 
+// TODO: optimize
+
 int cec_dimension_idx(int dim) {
   int index = -1;
   switch (dim) {
@@ -25,6 +27,9 @@ int cec_dimension_idx(int dim) {
   }
   return index;
 }
+
+
+// TODO: optimize
 
 inline double *shift_modern(double *input, int problem_num,
                             cec_state_t *state) {
@@ -48,6 +53,9 @@ void rotatefunc(double *x, double *xrot, int nx, double *Mr) {
   }
 }
 
+
+// TODO: optimize
+
 inline double *rotate_modern(double *input, int problem_num,
                              cec_state_t *state) {
 
@@ -65,6 +73,9 @@ inline double *rotate_modern(double *input, int problem_num,
   return output;
 }
 
+
+// TODO: optimize
+
 inline double *apply_transformation_rate(size_t dim, double *input,
                                          double t_rate) {
   double *output = calloc(dim, sizeof(double));
@@ -73,6 +84,9 @@ inline double *apply_transformation_rate(size_t dim, double *input,
   }
   return output;
 }
+
+
+// TODO: optimize
 
 inline double *shuffle_modern(size_t dim, int fn, double *input,
                               cec_state_t *state) {
@@ -85,6 +99,9 @@ inline double *shuffle_modern(size_t dim, int fn, double *input,
   }
   return output;
 }
+
+
+// TODO: optimize
 
 inline double *shift_rotate_modern(double *input, int problem_num,
                                    cec_state_t *state,
