@@ -40,12 +40,13 @@ target_compile_options(${EXECUTABLE}
   -fpic
   -fstack-protector-strong
   -g
-  #-O3
+  -pg
+  -O0
   -Wextra
   -pedantic
 )
 
-target_link_libraries(${EXECUTABLE}  ${EXTRA_LIBS} -fno-omit-frame-pointer)
+target_link_libraries(${EXECUTABLE}  ${EXTRA_LIBS} -pg -fno-omit-frame-pointer)
 
 
 add_executable(${TEST} ${TEST_FILES} ${INC_FILES} ${SRC_FILES})

@@ -45,7 +45,7 @@ numeric cec_interface_2017(int fn, numeric *input, cec_state_t *state) {
     break;
   }
   case 6: {
-    output = schaffer_F7_func_modern(state->dimension_, input, shiftrot);
+    output = schaffer_F7_func_modern(state->dimension_, shiftrot, shiftrot);
     break;
   }
   case 7: {
@@ -65,7 +65,7 @@ numeric cec_interface_2017(int fn, numeric *input, cec_state_t *state) {
     break;
   }
   case 11: {
-    output = cec2017_hf01_modern(state->dimension_, shiftrot, state);
+    output = cec2017_hf01_modern(state->dimension_, fn, input, state);
     break;
   }
   case 12: {
@@ -105,7 +105,7 @@ numeric cec_interface_2017(int fn, numeric *input, cec_state_t *state) {
     break;
   }
   }
-  return output + opt_vals[fn];
+  return output + opt_vals[fn - 1];
 }
 
 CecData cd = {

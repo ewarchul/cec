@@ -2,6 +2,104 @@
 #include "affine_trans.h"
 #include "types.h"
 
+numeric bent_cigar_func_modern(size_t dim, numeric *input) {
+  double result = 0;
+  result = input[0] * input[0];
+  for (size_t i = 1; i < dim; ++i) {
+    result += pow(10.0, 6.0) * input[i] * input[i];
+  }
+  return result;
+}
+
+double sphere_func_modern(size_t dim, double input[dim]) {
+  double result = 0;
+  for (size_t i = 0; i < dim; ++i) {
+    result += input[i] * input[i];
+  }
+  return result;
+}
+
+double sum_diff_pow_func_modern(size_t dim, double *input) {
+  double output = -1;
+  for (size_t i = 0; i < dim; ++i) {
+    output += pow((fabs(input[i])), (i + 1));
+  }
+  return output;
+}
+
+double levy_func_modern(size_t dim, double *input) {
+  double w[dim];
+  for (size_t i = 0; i < dim; ++i) {
+    w[i] = 1.0 + (input[i] - 1.0) / 4.0;
+  }
+  double term1 = pow((sin(M_PI * w[0])), 2);
+  double term2 =
+      pow((w[dim - 1] - 1), 2) * (1 + pow((sin(2 * M_PI * w[dim - 1])), 2));
+  double output = 0.0;
+
+  for (size_t i = 0; i < dim - 1; ++i) {
+    output += pow((w[i] - 1), 2) * (1 + 10 * pow((sin(M_PI * w[i] + 1)), 2));
+  }
+
+  return output + term1 + term2;
+}
+
+double rastrigin_func_modern(size_t dim, double *input) {
+  double output = 0;
+  for (size_t i = 0; i < dim; ++i) {
+    output += (input[i] * input[i] - 10.0 * cos(2.0 * M_PI * input[i]) + 10.0);
+  }
+  return output;
+}
+
+double schaffer_F7_func_modern(size_t dim, double *input,
+                               double *shifted_input) {
+  double output = 0;
+  for (size_t i = 0; i < dim - 1; ++i) {
+    input[i] = pow(shifted_input[i] * shifted_input[i] +
+                       shifted_input[i + 1] * shifted_input[i + 1],
+                   0.5);
+    double tmp = sin(50.0 * pow(input[i], 0.2));
+    output += pow(input[i], 0.5) + pow(input[i], 0.5) * tmp * tmp;
+  }
+  output = output * output / (dim - 1) / (dim - 1);
+
+  return output;
+}
+
+double rosenbrock_func_modern(size_t dim, double *input) {
+  input[0] += 1.0;
+  double output = 0;
+  for (size_t i = 0; i < dim - 1; ++i) {
+    input[i + 1] += 1.0; // shift to orgin
+    double tmp1 = input[i] * input[i] - input[i + 1];
+    double tmp2 = input[i] - 1.0;
+    output += 100.0 * tmp1 * tmp1 + tmp2 * tmp2;
+  }
+  return output;
+}
+
+double schwefel_func_modern(size_t dim, double *input) {
+  double output = 0.0;
+  for (size_t i = 0; i < dim; ++i) {
+    input[i] += 4.209687462275036e+002;
+    if (input[i] > 500) {
+      output -= (500.0 - fmod(input[i], 500)) *
+                sin(pow(500.0 - fmod(input[i], 500), 0.5));
+      double tmp = (input[i] - 500.0) / 100;
+      output += tmp * tmp / dim;
+    } else if (input[i] < -500) {
+      output -= (-500.0 + fmod(fabs(input[i]), 500)) *
+                sin(pow(500.0 - fmod(fabs(input[i]), 500), 0.5));
+      double tmp = (input[i] + 500.0) / 100;
+      output += tmp * tmp / dim;
+    } else
+      output -= input[i] * sin(pow(fabs(input[i]), 0.5));
+  }
+  output += 4.189828872724338e+002 * dim;
+  return output;
+}
+
 void bent_cigar_func(double *x, double *f, int nx, double *Os, double *Mr,
                      int s_flag, int r_flag) /* Bent_Cigar */
 {
@@ -15,15 +113,6 @@ void bent_cigar_func(double *x, double *f, int nx, double *Os, double *Mr,
   }
   free(y);
   free(z);
-}
-
-numeric bent_cigar_func_modern(size_t dim, numeric *input) {
-  double result = 0;
-  result = input[0] * input[0];
-  for (size_t i = 1; i < dim; ++i) {
-    result += pow(10.0, 6.0) * input[i] * input[i];
-  }
-  return result;
 }
 
 void sphere_func(double *x, double *f, int nx, double *Os, double *Mr,
@@ -40,28 +129,25 @@ void sphere_func(double *x, double *f, int nx, double *Os, double *Mr,
   free(z);
 }
 
-double sphere_func_modern(size_t dim, double input[dim]) {
-  double result = 0;
+double zakharov_func_modern(size_t dim, double *input) {
+  double output = 0.0;
+  double sum1 = 0.0;
+  double sum2 = 0.0;
   for (size_t i = 0; i < dim; ++i) {
-    result += input[i] * input[i];
+    sum1 += pow(input[i], 2);
+    sum2 += 0.5 * (i + 1) * input[i];
   }
-  return result;
+  output = sum1 + pow(sum2, 2) + pow(sum2, 4);
+  return output;
 }
 
-/*double *apply_affine_transform(size_t dim, double input[dim], int
- * problem_num,*/
-/*cec_state_t *state,*/
-/*cec_affine_transforms_t info) {*/
-/*double *output = calloc(dim, dim * sizeof(double));*/
-/*if (info.shift_rotate_) {*/
-/*output = shift_rotate_modern(dim, input, problem_num, state, info);*/
-/*} else if (info.rotate_) {*/
-/*output = rotate_modern(dim, input, problem_num, state);*/
-/*} else if (info.shift_) {*/
-/*output = shift_modern(dim, input, problem_num, state);*/
-/*}*/
-/*return output;*/
-/*}*/
+double step_rastrigin_func_modern(size_t dim, double *input) {
+  double output = 0.0;
+  for (size_t i = 0; i < dim; ++i) {
+    output += (input[i] * input[i] - 10.0 * cos(2.0 * M_PI * input[i]) + 10.0);
+  }
+  return output;
+}
 
 void ellips_func(double *x, double *f, int nx, double *Os, double *Mr,
                  int s_flag, int r_flag) {
@@ -75,14 +161,6 @@ void ellips_func(double *x, double *f, int nx, double *Os, double *Mr,
   }
   free(y);
   free(z);
-}
-
-double sum_diff_pow_func_modern(size_t dim, double *input) {
-  double output = -1;
-  for (size_t i = 0; i < dim; ++i) {
-    output += pow((fabs(input[i])), (i + 1));
-  }
-  return output;
 }
 
 void sum_diff_pow_func(double *x, double *f, int nx, double *Os, double *Mr,
@@ -101,23 +179,6 @@ void sum_diff_pow_func(double *x, double *f, int nx, double *Os, double *Mr,
   f[0] = sum;
   free(y);
   free(z);
-}
-
-double levy_func_modern(size_t dim, double *input) {
-  double w[dim];
-  for (size_t i = 0; i < dim; ++i) {
-    w[i] = 1.0 + (input[i] - 1.0) / 4.0;
-  }
-  double term1 = pow((sin(M_PI * w[0])), 2);
-  double term2 =
-      pow((w[dim - 1] - 1), 2) * (1 + pow((sin(2 * M_PI * w[dim - 1])), 2));
-  double output = 0.0;
-
-  for (size_t i = 0; i < dim - 1; ++i) {
-    output += pow((w[i] - 1), 2) * (1 + 10 * pow((sin(M_PI * w[i] + 1)), 2));
-  }
-
-  return output + term1 + term2;
 }
 
 void levy_func(double *x, double *f, int nx, double *Os, double *Mr, int s_flag,
@@ -176,18 +237,6 @@ void dif_powers_func(double *x, double *f, int nx, double *Os, double *Mr,
   free(z);
 }
 
-double rosenbrock_func_modern(size_t dim, double *input) {
-  input[0] += 1.0;
-  double output = 0;
-  for (size_t i = 0; i < dim - 1; ++i) {
-    input[i + 1] += 1.0; // shift to orgin
-    double tmp1 = input[i] * input[i] - input[i + 1];
-    double tmp2 = input[i] - 1.0;
-    output += 100.0 * tmp1 * tmp1 + tmp2 * tmp2;
-  }
-  return output;
-}
-
 void rosenbrock_func(double *x, double *f, int nx, double *Os, double *Mr,
                      int s_flag, int r_flag) {
   int i;
@@ -205,21 +254,6 @@ void rosenbrock_func(double *x, double *f, int nx, double *Os, double *Mr,
   }
   free(y);
   free(z);
-}
-
-double schaffer_F7_func_modern(size_t dim, double *input,
-                               double *shifted_input) {
-  double output = 0;
-  for (size_t i = 0; i < dim - 1; ++i) {
-    input[i] = pow(shifted_input[i] * shifted_input[i] +
-                       shifted_input[i + 1] * shifted_input[i + 1],
-                   0.5);
-    double tmp = sin(50.0 * pow(input[i], 0.2));
-    output += pow(input[i], 0.5) + pow(input[i], 0.5) * tmp * tmp;
-  }
-  output = output * output / (dim - 1) / (dim - 1);
-
-  return output;
 }
 
 void schaffer_F7_func(double *x, double *f, int nx, double *Os, double *Mr,
@@ -304,14 +338,6 @@ void griewank_func(double *x, double *f, int nx, double *Os, double *Mr,
   free(z);
 }
 
-double rastrigin_func_modern(size_t dim, double *input) {
-  double output = 0;
-  for (size_t i = 0; i < dim; ++i) {
-    output += (input[i] * input[i] - 10.0 * cos(2.0 * M_PI * input[i]) + 10.0);
-  }
-  return output;
-}
-
 void rastrigin_func(double *x, double *f, int nx, double *Os, double *Mr,
                     int s_flag, int r_flag) {
   int i;
@@ -324,27 +350,6 @@ void rastrigin_func(double *x, double *f, int nx, double *Os, double *Mr,
   }
   free(y);
   free(z);
-}
-
-double schwefel_func_modern(size_t dim, double *input) {
-  double output = 0.0;
-  for (size_t i = 0; i < dim; ++i) {
-    input[i] += 4.209687462275036e+002;
-    if (input[i] > 500) {
-      output -= (500.0 - fmod(input[i], 500)) *
-                sin(pow(500.0 - fmod(input[i], 500), 0.5));
-      double tmp = (input[i] - 500.0) / 100;
-      output += tmp * tmp / dim;
-    } else if (input[i] < -500) {
-      output -= (-500.0 + fmod(fabs(input[i]), 500)) *
-                sin(pow(500.0 - fmod(fabs(input[i]), 500), 0.5));
-      double tmp = (input[i] + 500.0) / 100;
-      output += tmp * tmp / dim;
-    } else
-      output -= input[i] * sin(pow(fabs(input[i]), 0.5));
-  }
-  output += 4.189828872724338e+002 * dim;
-  return output;
 }
 
 void schwefel_func(double *x, double *f, int nx, double *Os, double *Mr,
@@ -492,18 +497,6 @@ void hgbat_func(double *x, double *f, int nx, double *Os, double *Mr,
   free(z);
 }
 
-double zakharov_func_modern(size_t dim, double *input) {
-  double output = 0.0;
-  double sum1 = 0.0;
-  double sum2 = 0.0;
-  for (size_t i = 0; i < dim; ++i) {
-    sum1 += pow(input[i], 2);
-    sum2 += 0.5 * (i + 1) * input[i];
-  }
-  output = sum1 + pow(sum2, 2) + pow(sum2, 4);
-  return output;
-}
-
 void zakharov_func(double *x, double *f, int nx, double *Os, double *Mr,
                    int s_flag, int r_flag) {
   int i;
@@ -639,14 +632,6 @@ void Chebyshev(double *x, int D, double *f) {
       sum += px * px;
   }
   f[0] += sum;
-}
-
-double step_rastrigin_func_modern(size_t dim, double *input) {
-  double output = 0.0;
-  for (size_t i = 0; i < dim; ++i) {
-    output += (input[i] * input[i] - 10.0 * cos(2.0 * M_PI * input[i]) + 10.0);
-  }
-  return output;
 }
 
 void step_rastrigin_func(double *x, double *f, int nx, double *Os, double *Mr,

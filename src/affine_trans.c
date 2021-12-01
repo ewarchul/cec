@@ -7,7 +7,7 @@ void shiftfunc(double *x, double *xshift, int nx, double *Os) {
   }
 }
 
-static inline int cec_dimension_idx(int dim) {
+int cec_dimension_idx(int dim) {
   int index = -1;
   switch (dim) {
   case 10:
@@ -30,7 +30,7 @@ inline double *shift_modern(double *input, int problem_num,
                             cec_state_t *state) {
   int dim = state->dimension_;
   double *output = calloc(dim, sizeof(double));
-  for (size_t i = 0; i < dim; ++i) {
+  for (int i = 0; i < dim; ++i) {
     output[i] = input[i] - state->data_.shifts_[cec_dimension_idx(dim)]
                                .data_[problem_num - 1]
                                .data_[i];
@@ -53,9 +53,9 @@ inline double *rotate_modern(double *input, int problem_num,
 
   int dim = state->dimension_;
   double *output = calloc(dim, sizeof(double));
-  for (size_t i = 0; i < dim; ++i) {
+  for (int i = 0; i < dim; ++i) {
     output[i] = 0;
-    for (size_t j = 0; j < dim; ++j) {
+    for (int j = 0; j < dim; ++j) {
       output[i] =
           output[i] + input[j] * state->data_.rotates_[cec_dimension_idx(dim)]
                                      .data_[problem_num - 1]
@@ -70,6 +70,18 @@ inline double *apply_transformation_rate(size_t dim, double *input,
   double *output = calloc(dim, sizeof(double));
   for (size_t i = 0; i < dim; ++i) {
     output[i] = input[i] * t_rate;
+  }
+  return output;
+}
+
+inline double *shuffle_modern(size_t dim, int fn, double *input,
+                              cec_state_t *state) {
+  double *output = calloc(dim, sizeof(double));
+  for (size_t i = 0; i < dim; ++i) {
+    int index =
+        state->data_.shuffles_[cec_dimension_idx(dim)].data_[fn - 1].data_[i] -
+        1;
+    output[i] = input[index];
   }
   return output;
 }

@@ -35,7 +35,9 @@ double *apply_transformation_rate(size_t dim, double input[dim], double t_rate);
 double *shift_rotate_modern(double *input, int problem_num,
                             cec_state_t *state, cec_affine_transforms_t info);
 double *shift_modern(double *input, int problem_num, cec_state_t *state);
-
+double *shuffle_modern(size_t dim, int fn, double *input,
+                              cec_state_t *state);
+int cec_dimension_idx(int dim);
 
 
 void shiftfunc(double *, double *, int, double *);

@@ -2,6 +2,7 @@
 #include "affine_trans.h"
 #include "basic_funcs.h"
 #include "types.h"
+#include <string.h>
 
 void cec2014_hf01(double *x, double *f, int nx, double *Os, double *Mr, int *S,
                   int s_flag, int r_flag) {
@@ -427,41 +428,58 @@ void cec2017_hf01(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   free(z);
 }
 
-double cec2017_hf01_modern(size_t dim, double *input, cec_state_t *state) {
-  int tmp, cf_num = 3;
-  int G[3], G_nx[3];
-  double Gp[3] = {0.2, 0.4, 0.4};
+typedef struct cec_shuffles_t cec_shuffles_t;
+struct cec_shuffles_t {
+  int shifts_[6];
+  int partition_idx_[6];
+};
 
-  tmp = 0;
-  for (int i = 0; i < cf_num - 1; i++) {
-    G_nx[i] = ceil(Gp[i] * dim);
-    tmp += G_nx[i];
+cec_shuffles_t mk_shuffles(size_t dim, int fn_nums, double weights[fn_nums]) {
+  int partition_idx[fn_nums];
+  double tmp = 0;
+  for (int i = 0; i < fn_nums - 1; ++i) {
+    partition_idx[i] = ceil(weights[i] * dim);
+    tmp += partition_idx[i];
   }
-  G_nx[cf_num - 1] = dim - tmp;
-  G[0] = 0;
-  for (int i = 1; i < cf_num; i++) {
-    G[i] = G[i - 1] + G_nx[i - 1];
-  }
-  int idxs[] = {7, 5, 10, 8, 2, 9, 6, 4, 1, 3};
+  partition_idx[fn_nums - 1] = dim - tmp;
 
-  for (int i = 0; i < dim; ++i) {
-
+  int shifts[fn_nums];
+  shifts[0] = 0;
+  for (int i = 1; i < fn_nums; ++i) {
+    shifts[i] = shifts[i - 1] + partition_idx[i - 1];
   }
 
-  double *shiftrot_y1 = shift_rotate_modern(
-      input, -1, state, (cec_affine_transforms_t){.transform_rate_ = 1.0});
-  double *shiftrot_y2 = shift_rotate_modern(
-      input, -1, state,
-      (cec_affine_transforms_t){.transform_rate_ = 2.048 / 100.0});
-  double *shiftrot_y3 = shift_rotate_modern(
-      input, -1, state,
-      (cec_affine_transforms_t){.transform_rate_ = 5.12 / 100.0});
+  cec_shuffles_t shuffles;
+  memcpy(shuffles.shifts_, shifts, fn_nums * sizeof(int));
+  memcpy(shuffles.partition_idx_, partition_idx, fn_nums * sizeof(int));
 
-  double y1 = zakharov_func_modern(G_nx[0], (shiftrot_y1 + G[0]));
-  double y2 = rosenbrock_func_modern(G_nx[1], (shiftrot_y2 + G[1]));
-  double y3 = rastrigin_func_modern(G_nx[2], (shiftrot_y3 + G[2]));
-  double output = y1 + y2 + y3;
-  return output;
+  return shuffles;
+}
+
+double cec2017_hf01_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[3] = {0.2, 0.4, 0.4};
+  cec_shuffles_t shuffles = mk_shuffles(dim, 3, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = zakharov_func_modern(shuffles.partition_idx_[0],
+                                    (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 2.048 / 100.0);
+
+  double y_1 = rosenbrock_func_modern(shuffles.partition_idx_[1],
+                                      (tmp + shuffles.shifts_[1]));
+
+  
+  double *tmp2 = apply_transformation_rate(10, shuffled, 5.12 / 100.0);
+  double y_2 = rastrigin_func_modern(shuffles.partition_idx_[2],
+                                     (tmp2 + shuffles.shifts_[2]));
+
+  return y_0 + y_1 + y_2;
 }
 
 void cec2017_hf02(double *x, double *f, int nx, double *Os, double *Mr, int *S,
