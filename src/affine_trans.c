@@ -1,5 +1,13 @@
 #include "affine_trans.h"
 
+double *shift_modern(double *input, int fn, cec_state_t *state);
+double *shuffle_modern(size_t dim, int fn, double *input, cec_state_t *state);
+double *rotate_modern(double *input, int fn, cec_state_t *state);
+double *apply_transformation_rate(size_t dim, double input[dim], double t_rate);
+double *shift_rotate_modern(double *input, int problem_num, cec_state_t *state,
+                            cec_affine_transforms_t info);
+int cec_dimension_idx(size_t dim);
+
 void shiftfunc(double *x, double *xshift, int nx, double *Os) {
   int i;
   for (i = 0; i < nx; i++) {

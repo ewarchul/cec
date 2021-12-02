@@ -13,8 +13,8 @@
 #include <time.h>
 
 #define REP 1
-#define BENCH_ITERS 10000
-#define FN 11
+#define BENCH_ITERS 1
+#define FN 13
 
 extern CecData cd;
 

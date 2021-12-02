@@ -547,6 +547,28 @@ void cec2017_hf02(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   free(z);
 }
 
+double cec2017_hf03_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[3] = {0.3, 0.3, 0.4};
+  cec_shuffles_t shuffles = mk_shuffles(dim, 3, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = bent_cigar_func_modern(shuffles.partition_idx_[0],
+                                  (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 2.048);
+  double y_1 = rosenbrock_func_modern(shuffles.partition_idx_[1],
+                                    (tmp + shuffles.shifts_[1]));
+  double y_2 = bi_rastrigin_func_modern(shuffles.partition_idx_[2],
+                                      (shuffled + shuffles.shifts_[2]));
+
+  return y_0 + y_1 + y_2;
+}
+
 void cec2017_hf03(double *x, double *f, int nx, double *Os, double *Mr, int *S,
                   int s_flag, int r_flag) {
   int i, tmp, cf_num = 3;

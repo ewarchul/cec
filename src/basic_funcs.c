@@ -27,7 +27,6 @@ double ellips_func_modern(size_t dim, double input[dim]) {
   return output;
 }
 
-
 double sum_diff_pow_func_modern(size_t dim, double *input) {
   double output = -1;
   for (size_t i = 0; i < dim; ++i) {
@@ -658,6 +657,65 @@ void step_rastrigin_func(double *x, double *f, int nx, double *Os, double *Mr,
   }
   free(y);
   free(z);
+}
+
+double bi_rastrigin_func_modern(size_t dim, double input[dim]) {
+  int i;
+  double mu0 = 2.5, d = 1.0, s, mu1, tmp, tmp1, tmp2;
+  double *tmpx;
+  tmpx = (double *)malloc(sizeof(double) * nx);
+  s = 1.0 - 1.0 / (2.0 * pow(nx + 20.0, 0.5) - 8.2);
+  mu1 = -pow((mu0 * mu0 - d) / s, 0.5);
+ 
+  for (i = 0; i < dim; ++i) // shrink to the orginal search range
+  {
+    input[i] *= 10.0 / 100.0;
+  }
+
+  for (i = 0; i < nx; i++) {
+    tmpx[i] = 2 * y[i];
+    if (Os[i] < 0.0)
+      tmpx[i] *= -1.;
+  }
+  for (i = 0; i < nx; i++) {
+    z[i] = tmpx[i];
+    tmpx[i] += mu0;
+  }
+  tmp1 = 0.0;
+  tmp2 = 0.0;
+  for (i = 0; i < nx; i++) {
+    tmp = tmpx[i] - mu0;
+    tmp1 += tmp * tmp;
+    tmp = tmpx[i] - mu1;
+    tmp2 += tmp * tmp;
+  }
+  tmp2 *= s;
+  tmp2 += d * nx;
+  tmp = 0.0;
+
+  if (r_flag == 1) {
+    rotatefunc(z, y, nx, Mr);
+    for (i = 0; i < nx; i++) {
+      tmp += cos(2.0 * M_PI * y[i]);
+    }
+    if (tmp1 < tmp2)
+      f[0] = tmp1;
+    else
+      f[0] = tmp2;
+    f[0] += 10.0 * (nx - tmp);
+  } else {
+    for (i = 0; i < nx; i++) {
+      tmp += cos(2.0 * M_PI * z[i]);
+    }
+    if (tmp1 < tmp2)
+      f[0] = tmp1;
+    else
+      f[0] = tmp2;
+    f[0] += 10.0 * (nx - tmp);
+  }
+  free(y);
+  free(z);
+  free(tmpx);
 }
 
 void bi_rastrigin_func(double *x, double *f, int nx, double *Os, double *Mr,
