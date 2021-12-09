@@ -87,6 +87,33 @@ double rosenbrock_func_modern(size_t dim, double *input) {
   return output;
 }
 
+double ackley_func_modern(size_t dim, double *input) {
+  double sum1 = 0.0;
+  double sum2 = 0.0;
+  for (size_t i = 0; i < dim; i++) {
+    sum1 += input[i] * input[i];
+    sum2 += cos(2.0 * M_PI * input[i]);
+  }
+  sum1 = -0.2 * sqrt(sum1 / dim);
+  sum2 /= dim;
+  double output = M_E - 20.0 * exp(sum1) - exp(sum2) + 20.0;
+  return output;
+}
+
+double hgbat_func_modern(size_t dim, double *input) {
+  double r2 = 0.0, sum_z = 0.0;
+  for (size_t i = 0; i < dim; i++) {
+    double shifted = input[i] - 1.0; // shift to orgin
+    r2 += shifted * shifted;
+    sum_z += shifted;
+  }
+
+  double alpha = 1.0 / 4.0;
+  double output = pow(fabs(pow(r2, 2.0) - pow(sum_z, 2.0)), 2 * alpha) +
+                  (0.5 * r2 + sum_z) / dim + 0.5;
+  return output;
+}
+
 double schwefel_func_modern(size_t dim, double *input) {
   double output = 0.0;
   for (size_t i = 0; i < dim; ++i) {

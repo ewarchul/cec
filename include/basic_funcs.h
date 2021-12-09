@@ -40,6 +40,14 @@ double step_rastrigin_func_modern(size_t dim, numeric input[dim]);
 double levy_func_modern(size_t dim, numeric input[dim]);
 double schwefel_func_modern(size_t dim, numeric input[dim]);
 double bi_rastrigin_func_modern(size_t dim, double input[dim], cec_state_t *state, int fn);
+double ackley_func_modern(size_t dim, double *input);
+double hgbat_func_modern(size_t dim, double *input);
+
+double katsuura_func_modern(size_t dim, double *input);
+double grie_rosen_func_modern(size_t dim, double *input);
+double weierstrass_func_modern(size_t dim, double *input);
+double escaffer6_func_modern(size_t dim, double *input);
+double discus_func_modern(size_t dim, double *input);
 
 void Lennard_Jones(double *, int, double *);
 void Hilbert(double *, int, double *);

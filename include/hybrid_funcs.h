@@ -40,7 +40,13 @@ void cec2015_hf03(double *, double *, int, double *, double *, int *, int, int);
 double cec2017_hf01_modern(size_t dim, int fn, double *input, cec_state_t *state);
 double cec2017_hf02_modern(size_t dim, int fn, double *input, cec_state_t *state);
 double cec2017_hf03_modern(size_t dim, int fn, double *input, cec_state_t *state);
-
+double cec2017_hf04_modern(size_t dim, int fn, double *input, cec_state_t *state);
+double cec2017_hf05_modern(size_t dim, int fn, double *input, cec_state_t *state);
+double cec2017_hf06_modern(size_t dim, int fn, double *input, cec_state_t *state);
+double cec2017_hf07_modern(size_t dim, int fn, double *input, cec_state_t *state);
+double cec2017_hf08_modern(size_t dim, int fn, double *input, cec_state_t *state);
+double cec2017_hf09_modern(size_t dim, int fn, double *input, cec_state_t *state);
+double cec2017_hf10_modern(size_t dim, int fn, double *input, cec_state_t *state);
 
 void cec2017_hf01(double *, double *, int, double *, double *, int *, int, int);
 void cec2017_hf02(double *, double *, int, double *, double *, int *, int, int);

@@ -77,33 +77,38 @@ numeric cec_interface_2017(int fn, numeric *input, cec_state_t *state) {
     break;
   }
   case 14: {
-    output = schwefel_func_modern(state->dimension_, shiftrot);
+    output = cec2017_hf04_modern(state->dimension_, fn, input, state);
     break;
   }
   case 15: {
-    output = schwefel_func_modern(state->dimension_, shiftrot);
+    output = cec2017_hf05_modern(state->dimension_, fn, input, state);
     break;
   }
   case 16: {
-    output = schwefel_func_modern(state->dimension_, shiftrot);
+    output = cec2017_hf05_modern(state->dimension_, fn, input, state);
     break;
   }
   case 17: {
-    output = schwefel_func_modern(state->dimension_, shiftrot);
+    output = cec2017_hf06_modern(state->dimension_, fn, input, state);
     break;
   }
   case 18: {
-    output = schwefel_func_modern(state->dimension_, shiftrot);
+    output = cec2017_hf07_modern(state->dimension_, fn, input, state);
     break;
   }
   case 19: {
-    output = schwefel_func_modern(state->dimension_, shiftrot);
+    output = cec2017_hf08_modern(state->dimension_, fn, input, state);
     break;
   }
   case 20: {
-    output = schwefel_func_modern(state->dimension_, shiftrot);
+    output = cec2017_hf09_modern(state->dimension_, fn, input, state);
     break;
   }
+  case 21: {
+    output = cec2017_hf10_modern(state->dimension_, fn, input, state);
+    break;
+  }
+
   }
   return output + opt_vals[fn - 1];
 }

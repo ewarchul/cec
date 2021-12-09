@@ -559,13 +559,13 @@ double cec2017_hf03_modern(size_t dim, int fn, double *input,
   double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
 
   double y_0 = bent_cigar_func_modern(shuffles.partition_idx_[0],
-                                  (shuffled + shuffles.shifts_[0]));
+                                      (shuffled + shuffles.shifts_[0]));
   double *tmp = apply_transformation_rate(10, shuffled, 2.048 / 100.0);
-  //TODO fix rosenbrock
+  // TODO fix rosenbrock
   double y_1 = rosenbrock_func_modern(shuffles.partition_idx_[1],
-                                    (tmp + shuffles.shifts_[1]));
-  double y_2 = bi_rastrigin_func_modern(shuffles.partition_idx_[2],
-                                      (shuffled + shuffles.shifts_[2]), state, fn);
+                                      (tmp + shuffles.shifts_[1]));
+  double y_2 = bi_rastrigin_func_modern(
+      shuffles.partition_idx_[2], (shuffled + shuffles.shifts_[2]), state, fn);
 
   return y_0 + y_1 + y_2;
 }
@@ -613,6 +613,31 @@ void cec2017_hf03(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   free(z);
 }
 
+double cec2017_hf04_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[4] = {0.2, 0.2, 0.2, 0.4};
+  cec_shuffles_t shuffles = mk_shuffles(dim, 4, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shifted = shift_modern(input, fn, state);
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = ellips_func_modern(shuffles.partition_idx_[0],
+                                  (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 1.0);
+  double y_1 = ackley_func_modern(shuffles.partition_idx_[1],
+                                  (tmp + shuffles.shifts_[1]));
+  double y_2 = schaffer_F7_func_modern(
+      shuffles.partition_idx_[2], (shuffled + shuffles.shifts_[2]), shifted);
+  double y_3 = rastrigin_func_modern(shuffles.partition_idx_[3],
+                                     (shuffled + shuffles.shifts_[3]));
+
+  return y_0 + y_1 + y_2 + y_3;
+}
+
 void cec2017_hf04(double *x, double *f, int nx, double *Os, double *Mr, int *S,
                   int s_flag, int r_flag) {
   int i, tmp, cf_num = 4;
@@ -655,6 +680,30 @@ void cec2017_hf04(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   }
   free(y);
   free(z);
+}
+
+double cec2017_hf05_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[4] = {0.2, 0.2, 0.3, 0.3};
+  cec_shuffles_t shuffles = mk_shuffles(dim, 4, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = bent_cigar_func_modern(shuffles.partition_idx_[0],
+                                      (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 5.0 / 100.0);
+  double y_1 = hgbat_func_modern(shuffles.partition_idx_[1],
+                                 (tmp + shuffles.shifts_[1]));
+  double y_2 = rastrigin_func_modern(shuffles.partition_idx_[2],
+                                     (shuffled + shuffles.shifts_[2]));
+  double y_3 = rosenbrock_func_modern(shuffles.partition_idx_[3],
+                                      (shuffled + shuffles.shifts_[3]));
+
+  return y_0 + y_1 + y_2 + y_3;
 }
 
 void cec2017_hf05(double *x, double *f, int nx, double *Os, double *Mr, int *S,
@@ -701,6 +750,31 @@ void cec2017_hf05(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   free(y);
   free(z);
 }
+
+double cec2017_hf06_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[4] = {0.2, 0.2, 0.3, 0.3};
+  cec_shuffles_t shuffles = mk_shuffles(dim, 4, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = escaffer6_func_modern(shuffles.partition_idx_[0],
+                                     (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 5.0 / 100.0);
+  double y_1 = hgbat_func_modern(shuffles.partition_idx_[1],
+                                 (tmp + shuffles.shifts_[1]));
+  double y_2 = rosenbrock_func_modern(shuffles.partition_idx_[2],
+                                      (shuffled + shuffles.shifts_[2]));
+  double y_3 = schwefel_func_modern(shuffles.partition_idx_[3],
+                                    (shuffled + shuffles.shifts_[3]));
+
+  return y_0 + y_1 + y_2 + y_3;
+}
+
 void cec2017_hf06(double *x, double *f, int nx, double *Os, double *Mr, int *S,
                   int s_flag, int r_flag) {
   int i, tmp, cf_num = 4;
@@ -743,6 +817,31 @@ void cec2017_hf06(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   }
   free(y);
   free(z);
+}
+
+double cec2017_hf07_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[5] = {0.1, 0.2, 0.2, 0.2, 0.3};
+  cec_shuffles_t shuffles = mk_shuffles(dim, 5, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = katsuura_func_modern(shuffles.partition_idx_[0],
+                                    (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 5.0 / 100.0);
+  double y_1 = ackley_func_modern(shuffles.partition_idx_[1],
+                                  (tmp + shuffles.shifts_[1]));
+  double y_2 = grie_rosen_func_modern(shuffles.partition_idx_[2],
+                                      (shuffled + shuffles.shifts_[2]));
+  double y_3 = schwefel_func_modern(shuffles.partition_idx_[3],
+                                    (shuffled + shuffles.shifts_[3]));
+  double y_4 = rastrigin_func_modern(shuffles.partition_idx_[4],
+                                     (shuffled + shuffles.shifts_[4]));
+  return y_0 + y_1 + y_2 + y_3 + y_4;
 }
 
 void cec2017_hf07(double *x, double *f, int nx, double *Os, double *Mr, int *S,
@@ -789,6 +888,31 @@ void cec2017_hf07(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   }
   free(y);
   free(z);
+}
+
+double cec2017_hf08_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[5] = {0.2, 0.2, 0.2, 0.2, 0.2};
+  cec_shuffles_t shuffles = mk_shuffles(dim, 5, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = ellips_func_modern(shuffles.partition_idx_[0],
+                                  (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 5.0 / 100.0);
+  double y_1 = ackley_func_modern(shuffles.partition_idx_[1],
+                                  (tmp + shuffles.shifts_[1]));
+  double y_2 = rastrigin_func_modern(shuffles.partition_idx_[2],
+                                     (shuffled + shuffles.shifts_[2]));
+  double y_3 =
+      hgbat_func(shuffles.partition_idx_[3], (shuffled + shuffles.shifts_[3]));
+  double y_4 = discus_func_modern(shuffles.partition_idx_[4],
+                                  (shuffled + shuffles.shifts_[4]));
+  return y_0 + y_1 + y_2 + y_3 + y_4;
 }
 
 void cec2017_hf08(double *x, double *f, int nx, double *Os, double *Mr, int *S,
@@ -838,6 +962,31 @@ void cec2017_hf08(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   free(z);
 }
 
+double cec2017_hf09_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[5] = {0.2, 0.2, 0.2, 0.2, 0.2};
+  cec_shuffles_t shuffles = mk_shuffles(dim, 5, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = bent_cigar_func_modern(shuffles.partition_idx_[0],
+                                      (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 5.0 / 100.0);
+  double y_1 = rastrigin_func_modern(shuffles.partition_idx_[1],
+                                     (tmp + shuffles.shifts_[1]));
+  double y_2 = grie_rosen_func_modern(shuffles.partition_idx_[2],
+                                      (shuffled + shuffles.shifts_[2]));
+  double y_3 = weierstrass_func_modern(shuffles.partition_idx_[3],
+                                       (shuffled + shuffles.shifts_[3]));
+  double y_4 = escaffer6_func_modern(shuffles.partition_idx_[4],
+                                     (shuffled + shuffles.shifts_[4]));
+  return y_0 + y_1 + y_2 + y_3 + y_4;
+}
+
 void cec2017_hf09(double *x, double *f, int nx, double *Os, double *Mr, int *S,
                   int s_flag, int r_flag) {
   int i, tmp, cf_num = 5;
@@ -879,6 +1028,36 @@ void cec2017_hf09(double *x, double *f, int nx, double *Os, double *Mr, int *S,
   }
   free(y);
   free(z);
+}
+
+double cec2017_hf10_modern(size_t dim, int fn, double *input,
+                           cec_state_t *state) {
+
+  double weights[6] = {0.1, 0.1, 0.2, 0.2, 0.2, 0.2};
+
+  cec_shuffles_t shuffles = mk_shuffles(dim, 5, weights);
+
+  cec_affine_transforms_t af_trans = {
+      .shift_ = true, .rotate_ = true, .transform_rate_ = 1};
+  double *shifted = shift_modern(input, fn, state);
+  double *shift_rotated = shift_rotate_modern(input, fn, state, af_trans);
+  double *shuffled = shuffle_modern(dim, fn, shift_rotated, state);
+
+  double y_0 = hgbat_func_modern(shuffles.partition_idx_[0],
+                                      (shuffled + shuffles.shifts_[0]));
+  double *tmp = apply_transformation_rate(10, shuffled, 5.0 / 100.0);
+  double y_1 = katsuura_func_modern(shuffles.partition_idx_[1],
+                                     (tmp + shuffles.shifts_[1]));
+  double y_2 = ackley_func_modern(shuffles.partition_idx_[2],
+                                      (shuffled + shuffles.shifts_[2]));
+  double y_3 = rastrigin_func_modern(shuffles.partition_idx_[3],
+                                       (shuffled + shuffles.shifts_[3]));
+  double y_4 = schwefel_func_modern(shuffles.partition_idx_[4],
+                                     (shuffled + shuffles.shifts_[4]));
+  double y_5 = schaffer_F7_func_modern(shuffles.partition_idx_[5],
+                                     (shuffled + shuffles.shifts_[5]), shifted);
+
+  return y_0 + y_1 + y_2 + y_3 + y_4 + y_5;
 }
 
 void cec2017_hf10(double *x, double *f, int nx, double *Os, double *Mr, int *S,
