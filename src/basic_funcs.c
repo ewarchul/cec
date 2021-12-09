@@ -652,70 +652,64 @@ void step_rastrigin_func(double *x, double *f, int nx, double *Os, double *Mr,
   /*y[i] = Os[i] + floor(2 * (y[i] - Os[i]) + 0.5) / 2;*/
   /*}*/
   sr_func(x, z, nx, Os, Mr, 5.12 / 100.0, s_flag, r_flag, y);
-  for (size_t i = 0; i < nx; i++) {
+  for (int i = 0; i < nx; i++) {
     f[0] += (z[i] * z[i] - 10.0 * cos(2.0 * M_PI * z[i]) + 10.0);
   }
   free(y);
   free(z);
 }
 
-double bi_rastrigin_func_modern(size_t dim, double input[dim]) {
-  int i;
-  double mu0 = 2.5, d = 1.0, s, mu1, tmp, tmp1, tmp2;
-  double *tmpx;
-  tmpx = (double *)malloc(sizeof(double) * nx);
-  s = 1.0 - 1.0 / (2.0 * pow(nx + 20.0, 0.5) - 8.2);
-  mu1 = -pow((mu0 * mu0 - d) / s, 0.5);
- 
-  for (i = 0; i < dim; ++i) // shrink to the orginal search range
+double bi_rastrigin_func_modern(size_t dim, double input[dim],
+                                cec_state_t *state, int fn) {
+
+  for (size_t i = 0; i < dim; ++i) // shrink to the orginal search range
   {
     input[i] *= 10.0 / 100.0;
   }
 
-  for (i = 0; i < nx; i++) {
-    tmpx[i] = 2 * y[i];
-    if (Os[i] < 0.0)
+  double *tmpx = malloc(sizeof(double) * dim);
+  size_t dimension = state->dimension_;
+  for (size_t i = 0; i < dim; i++) {
+    tmpx[i] = 2 * input[i];
+    if (state->data_.shifts_[cec_dimension_idx(dimension)]
+            .data_[fn - 1]
+            .data_[i] < 0.0) {
       tmpx[i] *= -1.;
+    }
   }
-  for (i = 0; i < nx; i++) {
+
+  double mu0 = 2.5;
+  double *z = malloc(dim * sizeof(double));
+  for (size_t i = 0; i < dim; i++) {
     z[i] = tmpx[i];
     tmpx[i] += mu0;
   }
-  tmp1 = 0.0;
-  tmp2 = 0.0;
-  for (i = 0; i < nx; i++) {
+
+  double tmp = 0.0, tmp1 = 0.0, tmp2 = 0.0;
+  double d = 1.0;
+  double s = 1.0 - 1.0 / (2.0 * pow(dim + 20.0, 0.5) - 8.2);
+  double mu1 = -pow((mu0 * mu0 - d) / s, 0.5);
+
+  for (size_t i = 0; i < dim; i++) {
     tmp = tmpx[i] - mu0;
     tmp1 += tmp * tmp;
     tmp = tmpx[i] - mu1;
     tmp2 += tmp * tmp;
   }
   tmp2 *= s;
-  tmp2 += d * nx;
+  tmp2 += d * dim;
   tmp = 0.0;
 
-  if (r_flag == 1) {
-    rotatefunc(z, y, nx, Mr);
-    for (i = 0; i < nx; i++) {
-      tmp += cos(2.0 * M_PI * y[i]);
-    }
-    if (tmp1 < tmp2)
-      f[0] = tmp1;
-    else
-      f[0] = tmp2;
-    f[0] += 10.0 * (nx - tmp);
-  } else {
-    for (i = 0; i < nx; i++) {
-      tmp += cos(2.0 * M_PI * z[i]);
-    }
-    if (tmp1 < tmp2)
-      f[0] = tmp1;
-    else
-      f[0] = tmp2;
-    f[0] += 10.0 * (nx - tmp);
+  for (size_t i = 0; i < dim; i++) {
+    tmp += cos(2.0 * M_PI * z[i]);
   }
-  free(y);
+
+  double output = tmp1 < tmp2 ? tmp1 : tmp2;
+  output += 10.0 * (dim - tmp);
+
   free(z);
   free(tmpx);
+  return output;
 }
 
 void bi_rastrigin_func(double *x, double *f, int nx, double *Os, double *Mr,

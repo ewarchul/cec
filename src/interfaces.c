@@ -73,7 +73,7 @@ numeric cec_interface_2017(int fn, numeric *input, cec_state_t *state) {
     break;
   }
   case 13: {
-    output = cec2017_hf03_modern(state->dimension_, shiftrot);
+    output = cec2017_hf03_modern(state->dimension_, fn, input, state);
     break;
   }
   case 14: {

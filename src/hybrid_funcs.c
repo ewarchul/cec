@@ -560,11 +560,12 @@ double cec2017_hf03_modern(size_t dim, int fn, double *input,
 
   double y_0 = bent_cigar_func_modern(shuffles.partition_idx_[0],
                                   (shuffled + shuffles.shifts_[0]));
-  double *tmp = apply_transformation_rate(10, shuffled, 2.048);
+  double *tmp = apply_transformation_rate(10, shuffled, 2.048 / 100.0);
+  //TODO fix rosenbrock
   double y_1 = rosenbrock_func_modern(shuffles.partition_idx_[1],
                                     (tmp + shuffles.shifts_[1]));
   double y_2 = bi_rastrigin_func_modern(shuffles.partition_idx_[2],
-                                      (shuffled + shuffles.shifts_[2]));
+                                      (shuffled + shuffles.shifts_[2]), state, fn);
 
   return y_0 + y_1 + y_2;
 }
