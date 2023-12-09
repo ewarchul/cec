@@ -1,7 +1,6 @@
 #pragma once
 
 #include "cecxx/types.hpp"
-#include <range/v3/view/any_view.hpp>
 #include <range/v3/view/transform.hpp>
 
 namespace cecxx::affine {

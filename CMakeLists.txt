@@ -6,7 +6,7 @@ if(NOT DEFINED CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 20 CACHE STRING "Default value for CXX_STANDARD property of targets.")
 endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -Werror -Wpedantic -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -Werror -Wpedantic -Wall")
 
 option(CECXX_BUILD_TESTS "Build the tests" ON)
 option(CECXX_TEST_EIGEN "Tests function with Eigen3 types" ON)
