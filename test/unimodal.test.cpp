@@ -16,7 +16,7 @@ boost::ut::suite<"unimodal functions"> errors = [] {
 
   "sphere_c_array"_test = [&] {
     int in[] = {1, 2, 3};
-    ut::expect(cecxx::unimodal::sphere(in) == 14);
+    ut::expect(cecxx::unimodal::sphere(std::span(in)) == 14);
   };
 
 #ifdef COMPILE_EIGEN_TESTS
@@ -26,6 +26,13 @@ boost::ut::suite<"unimodal functions"> errors = [] {
     ut::expect(cecxx::unimodal::sphere(in) == 14);
   };
 #endif 
+
+
+  "bent_cigar"_test = [&] {
+    std::vector<int> in{2, 2, 2};
+    ut::expect(cecxx::unimodal::bent_cigar(in) == 8000004);
+  };
+
 
 };
 

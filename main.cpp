@@ -1,12 +1,12 @@
-#include "cecxx/unimodal/sphere.hpp"
+#include "cecxx/unimodal/bent_cigar.hpp"
 #include <cecxx/unimodal/Unimodal.hpp>
+#include <cecxx/affine_transformation/AffineTransformation.hpp>
 #include <iostream>
 #include <vector>
 
 auto main() -> int {
-  auto x = std::vector<double>{1, 2, 3};
-  auto affine = cecxx::affine::dummy_transformation{1.1};
-  auto y = cecxx::unimodal::sphere(x, affine);
+  auto x = std::vector<double>{2, 2, 2};
+  auto y = cecxx::unimodal::bent_cigar(x);
 
   std::cout << y << std::endl;
 
