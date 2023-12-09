@@ -12,7 +12,7 @@ namespace rv = ranges::views;
 
 template <numeric_range R, typename AffineFun = affine::identity>
 [[nodiscard]] constexpr auto sphere(R &&xs, AffineFun &&fn = AffineFun{}) {
-  const auto affined = fn(std::forward<decltype(xs)>(xs));
+  auto affined = fn(std::forward<decltype(xs)>(xs));
   const auto ys = affined | rv::transform([](auto &&x) { return x * x; });
   return r::accumulate(ys, 0.0, r::plus{});
 }
