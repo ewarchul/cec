@@ -1,18 +1,19 @@
 #pragma once
 
-#include "cecxx/types.hpp"
+#include "cecxx/affine_transformation/identity.hpp"
 #include <functional>
 #include <numeric>
 #include <ranges>
-#include <span>
-#include <type_traits>
 
-namespace cecxx::problems::unimodal {
+namespace cecxx::unimodal {
+using namespace cecxx::types;
 
-[[nodiscard]] constexpr auto sphere(const std::ranges::range auto &x) {
-  using T = typename std::decay_t<decltype(*x.begin())>;
-  return std::accumulate(std::begin(x), std::end(x), types::as<T>(0),
-                         std::plus{});
+template <numeric_range R, affine_transformation<R> T = affine::identity>
+[[nodiscard]] constexpr auto sphere(R &&xs, T &&p = T{}) {
+  const auto xs_square =
+      std::invoke(p, std::forward<decltype(xs)>(xs)) |
+      std::ranges::views::transform([](auto &&x) { return x * x; });
+  return std::reduce(xs_square.begin(), xs_square.end());
 }
 
-} // namespace cecxx::problems::unimodal
+} // namespace cecxx::unimodal

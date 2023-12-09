@@ -4,8 +4,9 @@
 #include <vector>
 
 auto main() -> int {
-  const auto x = std::vector<double>{};
-  auto y = cecxx::problems::unimodal::sphere(x);
+  auto x = std::vector<double>{1, 2, 3};
+  auto affine = cecxx::affine::dummy_transformation{1.1};
+  auto y = cecxx::unimodal::sphere(x, affine);
 
   std::cout << y << std::endl;
 
