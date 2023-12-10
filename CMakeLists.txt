@@ -16,8 +16,11 @@ target_include_directories(cecxx INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DI
 target_compile_features(cecxx INTERFACE cxx_std_20)
 
 
+find_package(Eigen3 REQUIRED NO_MODULE)
+find_package(mdspan REQUIRED)
+
 add_executable(main main.cpp)
-target_link_libraries(main cecxx)
+target_link_libraries(main cecxx Eigen3::Eigen std::mdspan)
 set_target_properties(main PROPERTIES CXX_STANDARD 23)
 
 if(CECXX_BUILD_TESTS) 
