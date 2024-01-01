@@ -1,0 +1,18 @@
+{
+  "1": { 
+    "affine_mask": {
+      "shift": true,
+      "rotate": true,
+      "scale": true,
+    },
+    "scale_mul": 5
+  },
+  "2": {
+    "affine_mask": {
+      "shift": true,
+      "rotate": true,
+      "scale": true,
+    },
+    "scale_mul": 420
+  }
+}

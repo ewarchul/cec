@@ -1,34 +1,8 @@
-#include "cec.h"
+#include "cec/cec.h"
+#include "benchmark/cec2014.h"
+#include "cec/session.h"
 
-void cec(char *extdatadir, int cecVersion, int problem, double *input, int col,
-         int row, double *output, char *suite) {
-
-  double *x = malloc(col * sizeof(double));
-
-  for (int r = 0; r < row; r++) {
-    for (int c = 0; c < col; c++) {
-      x[c] = input[r + row * c];
-    }
-    switch (cecVersion) {
-    case 2014:
-      cec2014_interface(extdatadir, x, &output[r], col, row, problem);
-      break;
-    case 2015:
-      cec2015_interface(extdatadir, x, &output[r], col, row, problem);
-      break;
-    case 2017:
-      cec2017_interface(extdatadir, x, &output[r], col, row, problem);
-      break;
-    case 2019:
-      cec2019_interface(extdatadir, x, &output[r], col, row, problem);
-      break;
-    case 2021:
-      cec2021_interface(extdatadir, x, &output[r], col, row, problem, suite);
-      break;
-    default:
-      perror("Not implemented");
-      break;
-    }
-  }
-  free(x);
+f64* cec(cec_session* session, u8 fn_num, u8 dim, u8 input_num, f64* inputs) {
+  mdspan_f64 inputs_s = {dim, input_num, inputs};
+  return cec2014(session, fn_num, inputs_s);
 }

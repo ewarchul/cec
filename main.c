@@ -1,55 +1,30 @@
-#include "cec.h"
+#include <cec/cec.h>
+#include <cec/session.h>
+#include <cec/util.h>
 
-#include <stddef.h>
+#include <time.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <sys/stat.h>
 #include <stdio.h>
-#include <stdlib.h>
 
-#define REP 10000
+int main(void) {
+  u8   inputs_num = 1;
+  u8   dim        = 10;
+  f64* input      = init_generic_matrix(dim, inputs_num, 5);
+  print_matrix_f64(input, dim, inputs_num);
 
-CecData cd = {
-    .prevDimension = 0,
-    .prevFunction = 0,
-    .dataLoaded = 0,
-};
+  cec_session* session = create_cec_session(CEC2014, NULL);
 
-int main() {
-  int year[] = { 2014, 2015, 2017, 2019, 2021 };
-  char dataPath[50];
-  int fn_max[] = { 30, 15, 30, 10, 10 };
-  int dims[1] = {10};
-  double input[10] = { 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1 };
-  for (int y = 0; y < 5; ++y) {
-    for (int d = 0; d < 1; ++d) {
-      sprintf(dataPath, "../data/cec%d", year[y]);
-      for (int fn = 1; fn < fn_max[y] + 1; ++fn) {
-        for (int i = 0; i < REP; i++) {
-          double *output = malloc(dims[d] * sizeof(double));
-          switch (year[y]) {
-          case 2014:
-            cec2014_interface(dataPath, input, output, dims[d], 1, fn);
-            break;
-          case 2015:
-            cec2015_interface(dataPath, input, output, dims[d], 1, fn);
-            break;
-          case 2017:
-            cec2017_interface(dataPath, input, output, dims[d], 1, fn);
-            break;
-          case 2019:
-            cec2019_interface(dataPath, input, output, dims[d], 1, fn);
-            break;
-          case 2021:
-            cec2021_interface(dataPath, input, output, dims[d], 1, fn,
-                              "bias_shift_rot");
-            break;
-          }
-          free(output);
-        }
-      }
-    }
-  }
-  free(cd.M);
-  free(cd.OShift);
-  free(cd.SS);
-  free(cd.bias);
+  struct timeval st, et;
+  gettimeofday(&st, NULL);
+  f64* output = cec(session, 1, dim, inputs_num, input);
+  gettimeofday(&et, NULL);
+  int elapsed = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+  printf("Elapsed: %d us\n", elapsed);
+  print_vec_f64(output, dim);
+  free(input);
+  destroy_cec_session(session);
+
   return 0;
 }
