@@ -1,61 +1,35 @@
 #pragma once
 
-#include <sys/types.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <mdspan/mdspan.hpp>
 
-#define SPAN_F64   (span_f64)
-#define MDSPAN_F64 (mdspan_f64)
+enum class cec_version { CEC2014 };
+enum class table_type { rotate_table, shift_table, shuffle_table };
 
-#define PRIVATE    static
+using u8  = uint8_t;
+using u32 = uint32_t;
+using u64 = uint64_t;
 
-typedef enum { CEC2014 } cec_version;
-typedef enum { rotate_table, shift_table, shuffle_table } table_type;
+using i32 = int32_t;
+using i64 = int64_t;
+using f32 = float;
+using f64 = double;
 
-typedef u_int8_t  u8;
-typedef u_int32_t u32;
-typedef u_int64_t u64;
-
-typedef int32_t i32;
-typedef float   f32;
-typedef double  f64;
-typedef char    byte;
-
-typedef struct affine_transform_mask affine_transform_mask;
-struct affine_transform_mask {
-  bool shift;
-  bool rotate;
-  bool scale;
+struct geom_transform_info {
+  bool do_shift_;
+  bool do_rotate_;
+  bool do_scale_;
+  f64  scale_mul_;
 };
 
-typedef struct filename_t filename_t;
-struct filename_t {
-  byte name[128];
-};
-
-typedef struct table_info table_info;
 struct table_info {
   table_type type;
   u8         dim;
   u8         fn_num;
 };
 
-typedef struct span_f64 span_f64;
-struct span_f64 {
-  u8   size;
-  f64* data;
-};
+using real = f64;
 
-typedef struct mdspan_f64 mdspan_f64;
-struct mdspan_f64 {
-  u8   ncol;
-  u8   nrow;
-  f64* data;
-};
-
-typedef f64 (*optim_problem)(span_f64 input);
-
-typedef struct str str;
-struct str {
-  byte* data;
-  u8    len;
-};
+template <class ValueType>
+using matrix_span = Kokkos::mdspan<ValueType, Kokkos::dextents<size_t, 2>,
+                                   Kokkos::layout_right>;

@@ -7,7 +7,7 @@ cec_session* create_cec_session(cec_version version, byte* suite) {
   benchmark_info info = mk_benchmark_info(version);
   s->version          = version;
   s->suite            = suite;
-  s->allocator        = create_arena(120000);
+  s->allocator        = create_arena(10000000000);
   s->ctx              = generic_alloc(cec_ctx*, info.dim_num);
   for (u8 i = 0; i < info.dim_num; ++i) {
     s->ctx[info.dimensions[i]] =

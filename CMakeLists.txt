@@ -1,22 +1,25 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(cec LANGUAGES C VERSION 0.0.1)
-set(CMAKE_C_STANDARD 17 CACHE STRING "Default value for C_STANDARD property of targets.")
+project(cec LANGUAGES CXX VERSION 0.0.1)
+set(CMAKE_CXX_STANDARD 23 CACHE STRING "Default value for CXX_STANDARD property of targets.")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(json-c CONFIG)
 
 set(CEC_SOURCES 
-  src/io/io.c
-  src/util/allocator.c
-  src/context/context.c
-  src/geometry/trans.c
-  src/session/session.c
-  src/session/benchmark_info.c
-  src/problem/basic.c
-  src/benchmark/cec2014.c
-  src/cec.c
+  # src/io/io.cxx
+  # src/util/allocator.cxx
+  # src/context/context.cxx
+  # src/geometry/trans.cxx
+  # src/session/session.cxx
+  # src/session/benchmark_info.cxx
+  # src/problem/basic.cxx
+  # src/benchmark/cec2014.cxx
+  src/cec.cxx
 )
+
+find_package(fmt REQUIRED)
+find_package(range-v3 REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 add_library(cec SHARED ${CEC_SOURCES})
 target_include_directories(cec PUBLIC
@@ -24,11 +27,11 @@ target_include_directories(cec PUBLIC
   $<INSTALL_INTERFACE:include>
   PRIVATE src
 )
-target_link_libraries(cec json-c::json-c)
+target_link_libraries(cec fmt::fmt nlohmann_json::nlohmann_json range-v3::range-v3)
 
 target_compile_options(cec PRIVATE
-  -O3
-  -Werror
+  -O0
+  #  -Werror
   -Wall
   -Wextra
   -Wempty-body
@@ -40,9 +43,9 @@ target_compile_options(cec PRIVATE
   -Wno-unused-function
 )
 
-add_executable(main main.c)
+add_executable(main main.cxx)
 target_link_libraries(main cec)
-target_link_options(main PRIVATE -fsanitize=address)
+#target_link_options(main PRIVATE -fsanitize=address)
 target_compile_options(main PRIVATE -O3)
 
 
