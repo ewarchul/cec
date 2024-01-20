@@ -5,31 +5,23 @@ set(CMAKE_CXX_STANDARD 23 CACHE STRING "Default value for CXX_STANDARD property 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
-set(CEC_SOURCES 
-  # src/io/io.cxx
-  # src/util/allocator.cxx
-  # src/context/context.cxx
-  # src/geometry/trans.cxx
-  # src/session/session.cxx
-  # src/session/benchmark_info.cxx
-  # src/problem/basic.cxx
-  # src/benchmark/cec2014.cxx
-  src/cec.cxx
-)
-
 find_package(fmt REQUIRED)
 find_package(range-v3 REQUIRED)
 find_package(nlohmann_json REQUIRED)
+find_package(Eigen3 3.4 REQUIRED NO_MODULE)
+find_package(mdspan REQUIRED)
 
-add_library(cec SHARED ${CEC_SOURCES})
-target_include_directories(cec PUBLIC
+add_library(cec INTERFACE ${CEC_SOURCES})
+target_include_directories(cec INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  PRIVATE src
 )
-target_link_libraries(cec fmt::fmt nlohmann_json::nlohmann_json range-v3::range-v3)
 
-target_compile_options(cec PRIVATE
+
+add_executable(main main.cxx)
+target_compile_features(main PRIVATE cxx_std_23)
+target_link_libraries(main cec Eigen3::Eigen std::mdspan fmt::fmt nlohmann_json::nlohmann_json range-v3::range-v3)
+target_compile_options(main PUBLIC
   -O0
   #  -Werror
   -Wall
@@ -39,14 +31,10 @@ target_compile_options(cec PRIVATE
   -Wformat
   -Winit-self
   -Wunused-variable
-  #  -Wpedantic
+  -Wpedantic
   -Wno-unused-function
 )
 
-add_executable(main main.cxx)
-target_link_libraries(main cec)
-#target_link_options(main PRIVATE -fsanitize=address)
-target_compile_options(main PRIVATE -O3)
 
 
 

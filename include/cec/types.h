@@ -31,5 +31,5 @@ struct table_info {
 using real = f64;
 
 template <class ValueType>
-using matrix_span = Kokkos::mdspan<ValueType, Kokkos::dextents<size_t, 2>,
+using span_2d = Kokkos::mdspan<ValueType, Kokkos::dextents<size_t, 2>,
                                    Kokkos::layout_right>;
